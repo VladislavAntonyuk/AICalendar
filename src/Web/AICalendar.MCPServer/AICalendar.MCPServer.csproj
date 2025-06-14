@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>$(NetVersion)</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\AICalendar.ServiceDefaults\AICalendar.ServiceDefaults.csproj" />
+		<ProjectReference Include="..\AICalendar.Shared\AICalendar.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.2.0-preview.3" />
+	</ItemGroup>
+
+</Project>

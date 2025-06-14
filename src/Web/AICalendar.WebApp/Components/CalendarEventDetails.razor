@@ -1,0 +1,16 @@
+﻿@inherits AiCalendarBaseComponent
+
+<MudDialog>
+	<TitleContent>
+		<MudText Typo="Typo.h6">
+			<MudIcon Icon="@Icons.Material.Filled.EditCalendar" Class="mr-3 mb-n1" />
+			@CalendarEvent.Text
+		</MudText>
+	</TitleContent>
+	<DialogContent>
+		<MudText>@string.Join(',', CalendarEvent.Attendees)</MudText>
+	</DialogContent>
+	<DialogActions>
+		<MudButton Color="Color.Error" OnClick="CancelEvent">Cancel event</MudButton>
+	</DialogActions>
+</MudDialog>

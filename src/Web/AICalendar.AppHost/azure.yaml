@@ -1,0 +1,8 @@
+# yaml-language-server: $schema=https://raw.githubUsercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: AICalendar.AppHost
+services:  
+  app:
+    language: dotnet
+    project: .\AICalendar.AppHost.csproj
+    host: containerapp
