@@ -1,0 +1,13 @@
+﻿@using System.Reflection
+@inherits AiCalendarBaseComponent
+
+<div class="author">
+	<div>
+		<MudLink Href="https://vladislavantonyuk.github.io/" Target="_blank">Vladislav Antonyuk</MudLink>
+	</div>
+	<div>@frameworkName</div>
+	<div>
+		© @DateTime.UtcNow.Year
+	</div>
+	<div>Version: @Assembly.GetEntryAssembly()?.GetName().Version</div>
+</div>

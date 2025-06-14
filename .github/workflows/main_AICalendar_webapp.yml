@@ -1,0 +1,56 @@
+name: Build and deploy webapp
+
+on:
+    push:
+        branches: [ main ]
+    pull_request:
+        branches: [ main ]
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
+
+env:  
+  VERSION: 1.0.${{github.run_number}}.0
+
+jobs:
+    buildWebApp:
+        runs-on: windows-latest
+
+        steps:
+            -   uses: actions/checkout@v4
+
+            -   name: Set up .NET
+                uses: actions/setup-dotnet@v4
+                with:
+                    dotnet-version: '10.x'
+
+            -   name: Publish WebApp
+                run: dotnet publish src/Web/AICalendar.WebApp/AICalendar.WebApp.csproj -o '${{env.DOTNET_ROOT}}/webapp' /p:Version="${{ env.VERSION }}"
+
+            -   name: Publish WebApi
+                run: dotnet publish src/Web/AICalendar.ApiService/AICalendar.ApiService.csproj -o '${{env.DOTNET_ROOT}}/webapi' /p:Version="${{ env.VERSION }}"
+
+            -   name: Publish MCPServer
+                run: dotnet publish src/Web/AICalendar.MCPServer/AICalendar.MCPServer.csproj -o '${{env.DOTNET_ROOT}}/mcpserver' /p:Version="${{ env.VERSION }}"
+
+            -   name: Upload artifact for webapp job
+                uses: actions/upload-artifact@v4
+                with:
+                    name: webapp
+                    path: ${{env.DOTNET_ROOT}}/webapp
+                    retention-days: 1
+
+            -   name: Upload artifact for webapi job
+                uses: actions/upload-artifact@v4
+                with:
+                    name: webapi
+                    path: ${{env.DOTNET_ROOT}}/webapi
+                    retention-days: 1
+
+            -   name: Upload artifact for mcpserver job
+                uses: actions/upload-artifact@v4
+                with:
+                    name: mcpserver
+                    path: ${{env.DOTNET_ROOT}}/mcpserver
+                    retention-days: 1
