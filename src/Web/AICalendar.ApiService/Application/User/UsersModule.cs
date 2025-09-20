@@ -9,7 +9,7 @@ internal static class UsersModule
 	{
 		var group = routes.MapGroup("/api/v1/users")
 		                  .WithTags("Users")
-		                  .WithOpenApi();
+						  .RequireAuthorization();
 
 		group.MapGetUser();
 		group.MapCurrentUser();

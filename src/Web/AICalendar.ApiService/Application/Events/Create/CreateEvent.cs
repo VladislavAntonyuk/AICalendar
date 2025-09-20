@@ -1,4 +1,6 @@
-﻿using AICalendar.ApiService.Infrastructure.Results;
+﻿using System.Security.Claims;
+using AICalendar.ApiService.Infrastructure.Extensions;
+using AICalendar.ApiService.Infrastructure.Results;
 
 namespace AICalendar.ApiService.Application.Events.Create;
 
@@ -15,6 +17,7 @@ internal static class CreateEvent
 
 	private static async Task<IResult> Handler(
 		Request? request,
+		ClaimsPrincipal claims,
 		CreateEventHandler handler,
 		CancellationToken cancellationToken)
 	{
@@ -23,8 +26,7 @@ internal static class CreateEvent
 			return ApiResults.Problem(Result.Failure(Error.NullValue));
 		}
 
-		Guid.TryParse("8408511A-CBBE-4770-8145-ED01EF1741BC", out var currentUserId);
-		var result = await handler.Handle(currentUserId, request, cancellationToken);
+		var result = await handler.Handle(claims.GetUserId(), request, cancellationToken);
 		return result.Match(Results.Ok, ApiResults.Problem);
 	}
 

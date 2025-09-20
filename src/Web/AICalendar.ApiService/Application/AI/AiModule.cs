@@ -6,7 +6,7 @@ internal static class AiModule
 	{
 		var group = routes.MapGroup("/api/v1/ai")
 		                  .WithTags("AI")
-		                  .WithOpenApi();
+						  .RequireAuthorization();
 
 		group.MapAi();
 

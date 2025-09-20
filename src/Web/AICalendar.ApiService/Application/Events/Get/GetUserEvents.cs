@@ -1,4 +1,6 @@
-﻿using AICalendar.ApiService.Infrastructure.Results;
+﻿using System.Security.Claims;
+using AICalendar.ApiService.Infrastructure.Extensions;
+using AICalendar.ApiService.Infrastructure.Results;
 
 namespace AICalendar.ApiService.Application.Events.Get;
 
@@ -14,13 +16,12 @@ internal static class GetUserEvents
 	}
 
 	private static async Task<IResult> GetCurrentUserEventsHandler(
-		HttpContext context,
 		[AsParameters] GetEventsRange range,
+		ClaimsPrincipal claims,
 		GetUserEventsHandler handler,
 		CancellationToken cancellationToken)
 	{
-		Guid.TryParse("8408511A-CBBE-4770-8145-ED01EF1741BC", out var id);
-		var result = await handler.Handle(id, range, cancellationToken);
+		var result = await handler.Handle(claims.GetUserId(), range, cancellationToken);
 		return result.Match(Results.Ok, Results.NotFound);
 	}
 

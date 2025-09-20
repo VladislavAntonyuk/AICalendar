@@ -19,7 +19,7 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
 
 		builder.HasData(new User()
 		{
-			Id = Guid.Parse("8408511A-CBBE-4770-8145-ED01EF1741BC"),
+			Id = Guid.Parse("48b828bd-8f7d-41e6-8872-02a783e6edc2"),
 			Email = "vlad.antonyuk@gmail.com"
 		});
 	}

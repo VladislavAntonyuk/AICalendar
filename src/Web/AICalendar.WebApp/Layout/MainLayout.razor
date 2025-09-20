@@ -1,13 +1,13 @@
 @inherits AiCalendarBaseLayout
 
 <MudRTLProvider RightToLeft="@rightToLeft">
-	<MudThemeProvider @ref="@mudThemeProvider" @bind-IsDarkMode="@isDarkMode"/>
-	<MudPopoverProvider/>
+	<MudThemeProvider @ref="@mudThemeProvider" @bind-IsDarkMode="@isDarkMode" />
+	<MudPopoverProvider />
 	<MudDialogProvider CloseButton="true"
-	                   CloseOnEscapeKey="true"
-	                   BackdropClick="false"
-	                   Position="DialogPosition.Center"/>
-	<MudSnackbarProvider/>
+					   CloseOnEscapeKey="true"
+					   BackdropClick="false"
+					   Position="DialogPosition.Center" />
+	<MudSnackbarProvider />
 
 	<MudLayout>
 		<MudAppBar Elevation="1">
@@ -17,7 +17,7 @@
 				</MudLink>
 			</MudHidden>
 			<MudHidden Breakpoint="Breakpoint.MdAndUp">
-				<MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="DrawerToggle"/>
+				<MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="DrawerToggle" />
 			</MudHidden>
 			<MudHidden Breakpoint="Breakpoint.Xs">
 				<MudLink Href="/" Typo="Typo.h6" Class="ml-4" Color="Color.Inherit">@Constants.ProductName</MudLink>
@@ -25,20 +25,21 @@
 			<MudHidden Breakpoint="Breakpoint.Xs" Invert="true">
 				<MudLink Href="/" Typo="Typo.subtitle2" Color="Color.Inherit">@Constants.ProductName</MudLink>
 			</MudHidden>
-			<MudSpacer/>
+			<MudSpacer />
 			<MudToggleIconButton @bind-Toggled="rightToLeft"
-			                     Icon="@Icons.Material.Filled.FormatTextdirectionRToL"
-			                     ToggledIcon="@Icons.Material.Filled.FormatTextdirectionRToL"
-			                     Color="Color.Inherit"/>
+								 Icon="@Icons.Material.Filled.FormatTextdirectionRToL"
+								 ToggledIcon="@Icons.Material.Filled.FormatTextdirectionRToL"
+								 Color="Color.Inherit" />
+			<LoginControl />
 		</MudAppBar>
 
 		<MudDrawer @bind-Open="drawerOpen" Elevation="1" ClipMode="DrawerClipMode.Always">
-			<NavMenu/>
+			<NavMenu />
 			<MudLink Href="https://www.buymeacoffee.com/vlad.antonyuk" Target="_blank">
 				<MudImage Src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png"
-				          Alt="Buy Me A Coffee"
-				          Fluid="true"
-				          Class="side-image"/>
+						  Alt="Buy Me A Coffee"
+						  Fluid="true"
+						  Class="side-image" />
 			</MudLink>
 		</MudDrawer>
 		<MudMainContent>
@@ -55,7 +56,7 @@
 				</ErrorBoundary>
 			</MudContainer>
 			<MudScrollToTop Style="z-index: 1200">
-				<MudFab StartIcon="@Icons.Material.Filled.ArrowUpward" Color="Color.Primary"/>
+				<MudFab StartIcon="@Icons.Material.Filled.ArrowUpward" Color="Color.Primary" />
 			</MudScrollToTop>
 		</MudMainContent>
 	</MudLayout>

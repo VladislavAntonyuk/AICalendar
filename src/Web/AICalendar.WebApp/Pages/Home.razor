@@ -1,21 +1,28 @@
 ﻿@page "/"
 @inherits AiCalendarBaseComponent
 
-<PageTitle>Home</PageTitle>
+<PageTitle>AI Calendar</PageTitle>
 
-<MudTextField T="string" @bind-Value="@Prompt" />
+<AuthorizeView>
+	<Authorized>
+		<MudTextField T="string" @bind-Value="@Prompt" />
 
-<MudButton OnClick="SendRequest">Send request</MudButton>
+		<MudButton OnClick="SendRequest">Send request</MudButton>
 
-<MudText>@Response</MudText>
+		<MudText>@Response</MudText>
 
-<MudCalendar T="CalendarEventItem" @ref="calendar" Items="events" DateRangeChanged="DateRangeChanged" ItemClicked="EventClicked">
-	<CellTemplate>
-		<div style="width: 100%; height: 100%; border: 2px solid @GetColor(Color.Primary)">
-			<div style="background-color: @GetColor(Color.Secondary)">
-				<MudText Style="color: #ffffff;" Typo="Typo.body1" Align="Align.Center">@(context.Text)</MudText>
-			</div>
-			<div class="pa-2"><MudText Typo="Typo.body2">Attendees: @context.Attendees.Count</MudText></div>
-		</div>
-	</CellTemplate>
-</MudCalendar>
+		<MudCalendar T="CalendarEventItem" @ref="calendar" Items="events" DateRangeChanged="DateRangeChanged" ItemClicked="EventClicked">
+			<CellTemplate Context="caldendarContext">
+				<div style="width: 100%; height: 100%; border: 2px solid @GetColor(Color.Primary)">
+					<div style="background-color: @GetColor(Color.Secondary)">
+						<MudText Style="color: #ffffff;" Typo="Typo.body1" Align="Align.Center">@(caldendarContext.Text)</MudText>
+					</div>
+					<div class="pa-2"><MudText Typo="Typo.body2">Attendees: @caldendarContext.Attendees.Count</MudText></div>
+				</div>
+			</CellTemplate>
+		</MudCalendar>
+	</Authorized>
+	<NotAuthorized>
+		<Promo />
+	</NotAuthorized>
+</AuthorizeView>

@@ -1,4 +1,6 @@
-﻿using AICalendar.ApiService.Infrastructure.Results;
+﻿using System.Security.Claims;
+using AICalendar.ApiService.Infrastructure.Extensions;
+using AICalendar.ApiService.Infrastructure.Results;
 
 namespace AICalendar.ApiService.Application.User.Get;
 
@@ -17,8 +19,7 @@ internal static class GetUser
 	{
 		routes.MapGet("/me", GetCurrentUserHandler)
 		      .WithName("Get Current User")
-		      .WithSummary("Get Current User")
-		      .RequireAuthorization();
+		      .WithSummary("Get Current User");
 
 		return routes;
 	}
@@ -33,12 +34,11 @@ internal static class GetUser
 	}
 
 	private static async Task<IResult> GetCurrentUserHandler(
-		HttpContext context,
+		ClaimsPrincipal claims,
 		GetUserHandler handler,
 		CancellationToken cancellationToken)
 	{
-		Guid.TryParse("8408511A-CBBE-4770-8145-ED01EF1741BC", out var id);
-		var result = await handler.Handle(id, cancellationToken);
+		var result = await handler.Handle(claims.GetUserId(), cancellationToken);
 		return result.Match(Results.Ok, Results.NotFound);
 	}
 

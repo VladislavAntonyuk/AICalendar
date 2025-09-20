@@ -1,6 +1,7 @@
-﻿using AICalendar.ApiService.Application.Events.Get;
+﻿using System.Security.Claims;
 using AICalendar.ApiService.Application.User.Delete;
 using AICalendar.ApiService.Application.User.Get;
+using Microsoft.Identity.Web;
 
 namespace AICalendar.ApiService.Infrastructure.Extensions;
 
@@ -31,4 +32,10 @@ public static class UsersExtensions
         builder.Services.AddScoped<DeleteUsersHandler>();
         return builder;
     }
+
+	public static Guid GetUserId(this ClaimsPrincipal claims)
+	{
+		Guid.TryParse(claims.GetObjectId(), out var currentUserId);
+		return currentUserId;
+	}
 }

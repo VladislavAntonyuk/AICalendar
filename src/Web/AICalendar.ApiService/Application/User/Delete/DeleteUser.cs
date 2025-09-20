@@ -8,7 +8,8 @@ internal static class DeleteUser
 	{
 		routes.MapDelete("/{id:guid}", Handler)
 		      .WithName("Delete Users")
-		      .WithSummary("Delete Users");
+		      .WithSummary("Delete Users")
+			  .RequireAuthorization(); // TODO add policy admin
 
 		return routes;
 	}

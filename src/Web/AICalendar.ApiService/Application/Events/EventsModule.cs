@@ -10,7 +10,7 @@ internal static class EventsModule
 	{
 		var group = routes.MapGroup("/api/v1/events")
 		                  .WithTags("Events")
-		                  .WithOpenApi();
+						  .RequireAuthorization();
 
 		group.MapCreateEvent();
 		group.MapGetEvent();

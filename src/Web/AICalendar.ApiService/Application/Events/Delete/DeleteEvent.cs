@@ -1,4 +1,6 @@
-﻿using AICalendar.ApiService.Infrastructure.Results;
+﻿using System.Security.Claims;
+using AICalendar.ApiService.Infrastructure.Extensions;
+using AICalendar.ApiService.Infrastructure.Results;
 
 namespace AICalendar.ApiService.Application.Events.Delete;
 
@@ -15,11 +17,11 @@ internal static class DeleteEvent
 
 	private static async Task<IResult> Handler(
 		Guid id,
+		ClaimsPrincipal claims,
 		DeleteEventHandler handler,
 		CancellationToken cancellationToken)
 	{
-		Guid.TryParse("8408511A-CBBE-4770-8145-ED01EF1741BC", out var currentUserId);
-		var result = await handler.Handle(id, currentUserId, cancellationToken);
+		var result = await handler.Handle(id, claims.GetUserId(), cancellationToken);
 		return result.Match(Results.NoContent, ApiResults.Problem);
 	}
 }

@@ -1,4 +1,5 @@
-﻿using AICalendar.ApiService.Infrastructure.Results;
+﻿using System.Security.Claims;
+using AICalendar.ApiService.Infrastructure.Extensions;
 using Microsoft.Extensions.AI;
 
 namespace AICalendar.ApiService.Application.AI;
@@ -16,11 +17,11 @@ internal static class AiEvent
 
 	private static IAsyncEnumerable<ChatResponseUpdate> Handler(
 		AiHandler handler,
+		ClaimsPrincipal claims,
 		Request request,
 		CancellationToken cancellationToken)
 	{
-		Guid.TryParse("8408511A-CBBE-4770-8145-ED01EF1741BC", out var currentUserId);
-		return handler.Handle(currentUserId, request.Prompt, cancellationToken);
+		return handler.Handle(claims.GetUserId(), request.Prompt, cancellationToken);
 	}
 
 	internal record Request(string Prompt);

@@ -12,7 +12,6 @@
     <Project Path="src/Web/AICalendar.ApiService/AICalendar.ApiService.csproj" />
     <Project Path="src/Web/AICalendar.AppHost.Tests/AICalendar.AppHost.Tests.csproj" />
     <Project Path="src/Web/AICalendar.AppHost/AICalendar.AppHost.csproj" />
-    <Project Path="src/Web/AICalendar.MCPServer/AICalendar.MCPServer.csproj" />
     <Project Path="src/Web/AICalendar.ServiceDefaults/AICalendar.ServiceDefaults.csproj" />
     <Project Path="src/Web/AICalendar.Shared/AICalendar.Shared.csproj" Id="addd9c9f-8420-4cba-93cf-0046c7f8b6bb" />
     <Project Path="src/Web/AICalendar.WebApp/AICalendar.WebApp.csproj" />

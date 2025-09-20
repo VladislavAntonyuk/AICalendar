@@ -10,10 +10,10 @@ namespace AICalendar.WebApp.Pages;
 public partial class Home(IHttpClientFactory httpClientFactory, IDialogService dialogService)
 	: AiCalendarBaseComponent
 {
-	private List<CalendarEventItem> events = new();
+	private IEnumerable<CalendarEventItem> events = [];
 	private MudCalendar<CalendarEventItem>? calendar;
 
-	public string Prompt { get; set; } = "Schedule an event to user with email 'test@user.com' on 14 June 2025 from 15:00 till 16:30 with title 'Coffee break'";
+	public string Prompt { get; set; } = $"Schedule an event to user with email 'test@user.com' on {DateOnly.FromDateTime(DateTime.Now)} from 15:00 till 16:30 with title 'Coffee break'";
 
 	public string? Response { get; set; }
 
@@ -21,7 +21,7 @@ public partial class Home(IHttpClientFactory httpClientFactory, IDialogService d
 	{
 		var httpClient = httpClientFactory.CreateClient("AICalendarAPI");
 		var calendarEvents = await httpClient.GetFromJsonAsync<List<CalendarEvent>>($"events?from={dateRange.Start.GetValueOrDefault():O}&to={dateRange.End.GetValueOrDefault():O}") ?? [];
-		events = calendarEvents.Select(MapCalendarEventItem).ToList();
+		events = calendarEvents.Select(MapCalendarEventItem);
 	}
 
 	private async Task EventClicked(CalendarEventItem obj)
@@ -42,6 +42,13 @@ public partial class Home(IHttpClientFactory httpClientFactory, IDialogService d
 		Response = string.Empty;
 		var httpClient = httpClientFactory.CreateClient("AICalendarAPI");
 		var result = await httpClient.PostAsJsonAsync("ai", new AiRequest(Prompt));
+		if (!result.IsSuccessStatusCode)
+		{
+			var problemDetails = await result.Content.ReadFromJsonAsync<ProblemDetails>();
+			Response = problemDetails?.Title;
+			return;
+		}
+
 		await foreach (var update in result.Content.ReadFromJsonAsAsyncEnumerable<ChatResponseUpdate>())
 		{
 			Response += update;
@@ -62,6 +69,8 @@ public partial class Home(IHttpClientFactory httpClientFactory, IDialogService d
 		Text = calendarEvent.Title ?? string.Empty
 	};
 }
+
+internal record ProblemDetails(string Title);
 
 internal record AiRequest(string Prompt);
 

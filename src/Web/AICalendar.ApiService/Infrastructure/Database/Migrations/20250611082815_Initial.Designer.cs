@@ -74,7 +74,7 @@ namespace AICalendar.ApiService.Infrastructure.Database.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8408511a-cbbe-4770-8145-ed01ef1741bc"),
+                            Id = new Guid("48b828bd-8f7d-41e6-8872-02a783e6edc2"),
                             Email = "vlad.antonyuk@gmail.com"
                         });
                 });

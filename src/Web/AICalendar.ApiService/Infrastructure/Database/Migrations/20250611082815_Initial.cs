@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -48,7 +47,7 @@ namespace AICalendar.ApiService.Infrastructure.Database.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Email" },
-                values: new object[] { new Guid("8408511a-cbbe-4770-8145-ed01ef1741bc"), "vlad.antonyuk@gmail.com" });
+                values: new object[] { new Guid("48b828bd-8f7d-41e6-8872-02a783e6edc2"), "vlad.antonyuk@gmail.com" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_OrganizerId",
