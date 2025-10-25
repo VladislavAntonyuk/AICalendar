@@ -31,9 +31,6 @@ jobs:
             -   name: Publish WebApi
                 run: dotnet publish src/Web/AICalendar.ApiService/AICalendar.ApiService.csproj -o '${{env.DOTNET_ROOT}}/webapi' /p:Version="${{ env.VERSION }}"
 
-            -   name: Publish MCPServer
-                run: dotnet publish src/Web/AICalendar.MCPServer/AICalendar.MCPServer.csproj -o '${{env.DOTNET_ROOT}}/mcpserver' /p:Version="${{ env.VERSION }}"
-
             -   name: Upload artifact for webapp job
                 uses: actions/upload-artifact@v4
                 with:
@@ -46,11 +43,4 @@ jobs:
                 with:
                     name: webapi
                     path: ${{env.DOTNET_ROOT}}/webapi
-                    retention-days: 1
-
-            -   name: Upload artifact for mcpserver job
-                uses: actions/upload-artifact@v4
-                with:
-                    name: mcpserver
-                    path: ${{env.DOTNET_ROOT}}/mcpserver
                     retention-days: 1

@@ -10,8 +10,9 @@ namespace AICalendar.WebApp.Pages;
 public partial class Home(IHttpClientFactory httpClientFactory, IDialogService dialogService)
 	: AiCalendarBaseComponent
 {
-	private IEnumerable<CalendarEventItem> events = [];
+	private List<CalendarEventItem> events = [];
 	private MudCalendar<CalendarEventItem>? calendar;
+	private DateRange? currentDateRange;
 
 	public string Prompt { get; set; } = $"Schedule an event to user with email 'test@user.com' on {DateOnly.FromDateTime(DateTime.Now)} from 15:00 till 16:30 with title 'Coffee break'";
 
@@ -19,9 +20,10 @@ public partial class Home(IHttpClientFactory httpClientFactory, IDialogService d
 
 	private async Task DateRangeChanged(DateRange dateRange)
 	{
+		currentDateRange = dateRange;
 		var httpClient = httpClientFactory.CreateClient("AICalendarAPI");
-		var calendarEvents = await httpClient.GetFromJsonAsync<List<CalendarEvent>>($"events?from={dateRange.Start.GetValueOrDefault():O}&to={dateRange.End.GetValueOrDefault():O}") ?? [];
-		events = calendarEvents.Select(MapCalendarEventItem);
+		var calendarEvents = await httpClient.GetFromJsonAsync<List<CalendarEvent>>($"events?from={dateRange.Start.GetValueOrDefault():yyyy-MM-dd}&to={dateRange.End.GetValueOrDefault():yyyy-MM-dd}") ?? [];
+		events = calendarEvents.Select(MapCalendarEventItem).ToList();
 	}
 
 	private async Task EventClicked(CalendarEventItem obj)
@@ -33,7 +35,8 @@ public partial class Home(IHttpClientFactory httpClientFactory, IDialogService d
 			var parameters = new DialogParameters { { nameof(CalendarEventDetails.CalendarEvent), MapCalendarEventItem(calendarEvent) } };
 			var dialog = await dialogService.ShowAsync<CalendarEventDetails>(calendarEvent.Title, parameters);
 			await dialog.Result;
-			calendar?.Refresh();
+
+			await RefreshCalendar();
 		}
 	}
 
@@ -54,11 +57,11 @@ public partial class Home(IHttpClientFactory httpClientFactory, IDialogService d
 			Response += update;
 		}
 
-		calendar?.Refresh();
+		await RefreshCalendar();
 	}
 
 	private string GetColor(Color color) => $"var(--mud-palette-{color.ToDescriptionString()})";
-	
+
 	private CalendarEventItem MapCalendarEventItem(CalendarEvent calendarEvent) => new CalendarEventItem
 	{
 		Identifier = calendarEvent.Id,
@@ -68,6 +71,14 @@ public partial class Home(IHttpClientFactory httpClientFactory, IDialogService d
 		End = calendarEvent.End,
 		Text = calendarEvent.Title ?? string.Empty
 	};
+
+	private async Task RefreshCalendar()
+	{
+		if (calendar is not null)
+		{
+			await calendar.DateRangeChanged.InvokeAsync(currentDateRange);
+		}
+	}
 }
 
 internal record ProblemDetails(string Title);

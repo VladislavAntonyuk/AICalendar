@@ -1,4 +1,5 @@
-﻿using AICalendar.ApiService.Infrastructure.Extensions;
+﻿using System.Runtime.CompilerServices;
+using AICalendar.ApiService.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
@@ -11,7 +12,7 @@ internal sealed class AiHandler(IChatClient client, IOptions<AiSettings> setting
 	public async IAsyncEnumerable<ChatResponseUpdate> Handle(
 		Guid currentUserId,
 		string prompt,
-		CancellationToken cancellationToken = default)
+		[EnumeratorCancellation] CancellationToken cancellationToken = default)
 	{
 		if (context.HttpContext is null)
 		{
@@ -19,8 +20,8 @@ internal sealed class AiHandler(IChatClient client, IOptions<AiSettings> setting
 		}
 
 		var accessToken = await context.HttpContext.GetTokenAsync("access_token");
-		var mcpClient = await McpClientFactory.CreateAsync(new SseClientTransport(
-													  new SseClientTransportOptions()
+		var mcpClient = await McpClient.CreateAsync(new HttpClientTransport(
+													  new HttpClientTransportOptions()
 													  {
 														  Endpoint = settings.Value.McpBaseUrl,
 														  Name = "AICalendar.ApiService",
@@ -29,7 +30,7 @@ internal sealed class AiHandler(IChatClient client, IOptions<AiSettings> setting
 															  ["Authorization"] = $"Bearer {accessToken}"
 														  }
 													  }), cancellationToken: cancellationToken);
-		IList<McpClientTool> tools = await mcpClient.ListToolsAsync();
+		IList<McpClientTool> tools = await mcpClient.ListToolsAsync(cancellationToken: cancellationToken);
 
 		List<ChatMessage> messages = [new(ChatRole.User, prompt)];
 		var options = new ChatOptions() { Tools = [.. tools] };

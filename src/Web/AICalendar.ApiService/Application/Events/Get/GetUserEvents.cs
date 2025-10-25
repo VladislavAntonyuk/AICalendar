@@ -25,5 +25,5 @@ internal static class GetUserEvents
 		return result.Match(Results.Ok, Results.NotFound);
 	}
 
-	internal record GetEventsRange(DateTime From, DateTime To);
+	internal record GetEventsRange(DateOnly From, DateOnly To);
 }

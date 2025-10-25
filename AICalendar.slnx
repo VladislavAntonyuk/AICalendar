@@ -4,10 +4,14 @@
     <File Path=".github/dependabot.yml" />
     <File Path=".github/workflows/main_AICalendar_webapp.yml" />
     <File Path="Directory.Build.props" />
-    <File Path="global.json" />
+    <File Path="NuGet.config" />
     <File Path="README.md" />
   </Folder>
   <Folder Name="/src/" />
+  <Folder Name="/src/Client/">
+    <Project Path="src/Client/AICalendar.Client.ServiceDefaults/AICalendar.Client.ServiceDefaults.csproj" Id="71250bb5-7411-4467-a767-169f632bfcde" />
+    <Project Path="src/Client/AICalendar.Client/AICalendar.Client.csproj" />
+  </Folder>
   <Folder Name="/src/Web/">
     <Project Path="src/Web/AICalendar.ApiService/AICalendar.ApiService.csproj" />
     <Project Path="src/Web/AICalendar.AppHost.Tests/AICalendar.AppHost.Tests.csproj" />

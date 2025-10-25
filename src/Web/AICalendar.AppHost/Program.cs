@@ -15,9 +15,13 @@ var cache = builder.AddRedis("cache")
 				   .WithLifetime(ContainerLifetime.Persistent)
 				   .WithDataVolume("AICalendar-cache");
 
-var sqlServer = builder.AddSqlServer("sqlserver")
-                       .WithLifetime(ContainerLifetime.Persistent)
-					   .WithDataVolume("AICalendar-database");
+var dbPassword = builder.AddParameter("dbPassword", () => "P@ssword123!", secret: true);
+var sqlServer = builder
+                .AddSqlServer("sqlserver", dbPassword, 1433)
+                .WithLifetime(ContainerLifetime.Persistent)
+                .WithImageRegistry("mcr.microsoft.com")
+                .WithImage("azure-sql-edge")
+                .WithDataVolume("AICalendar-database");
 
 var database = sqlServer.AddDatabase("database", "AICalendar");
 
@@ -36,14 +40,8 @@ builder.AddProject<AICalendar_WebApp>("webfrontend")
 	   .WithReference(cache)
 	   .WaitFor(cache);
 
-if (!builder.Environment.IsDevelopment())
-{
-	var serviceBus = builder.AddRabbitMQ("servicebus")
-							.WithManagementPlugin()
-							.WithLifetime(ContainerLifetime.Persistent)
-							.WithDataVolume("AICalendar-servicebus");
-
-	apiService.WithReference(serviceBus);
-}
+//builder.AddProject<Projects.AICalendar_Client>("aicalendar-client")
+//       .WithReference(apiService)
+//       .WaitFor(apiService);
 
 await builder.Build().RunAsync();
