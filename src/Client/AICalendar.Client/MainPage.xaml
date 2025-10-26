@@ -5,6 +5,7 @@
              xmlns:shared="clr-namespace:AICalendar.Shared;assembly=AICalendar.Shared"
              xmlns:scheduler="http://schemas.syncfusion.com/maui"
              x:Class="AICalendar.Client.MainPage"
+             Shell.FlyoutBehavior="Disabled"
              x:DataType="global:MainPageViewModel"
              x:Name="HomePage">
 
@@ -16,12 +17,21 @@
 			        Command="{Binding LogoutCommand}"/>
 
 			<scheduler:SfScheduler
+				BackgroundColor="Gray"
 					Grid.Row="1"
 					View="Month"
 					AllowAppointmentDrag="False"
 					AppointmentsSource="{Binding Appointments}"
 					TappedCommand="{Binding TappedCommand}"
 					ViewChangedCommand="{Binding RefreshCalendarCommand}"/>
+
+			<Button
+				Grid.Row="1"
+				HorizontalOptions="End"
+				VerticalOptions="End"
+				Margin="0 0 30 30"
+				Text ="+"
+				Command="{Binding CreateEventCommand}"/>
 
 		</Grid>
 	</ScrollView>

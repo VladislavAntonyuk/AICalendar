@@ -80,8 +80,3 @@ public partial class Home(IHttpClientFactory httpClientFactory, IDialogService d
 		}
 	}
 }
-
-internal record ProblemDetails(string Title);
-
-internal record AiRequest(string Prompt);
-

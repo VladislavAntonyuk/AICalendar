@@ -32,7 +32,7 @@ public static class Scheduler
 		DateTime from, DateTime to)
 	{
 		SetAuth(httpClient, httpContextAccessor);
-		var events = await httpClient.GetFromJsonAsync<List<CalendarEvent>>($"events?from={from}&to={to}");
+		var events = await httpClient.GetFromJsonAsync<List<CalendarEvent>>($"events?from={from:yyyy-MM-dd}&to={to:yyyy-MM-dd}");
 		return events ?? [];
 	}
 

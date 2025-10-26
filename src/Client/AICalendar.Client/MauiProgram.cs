@@ -1,4 +1,5 @@
 ﻿using AICalendar.Client.Auth;
+using CommunityToolkit.Maui;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
@@ -17,6 +18,7 @@ public static class MauiProgram
 		builder.ConfigureSyncfusionCore();
 		builder
 			.UseMauiApp<App>()
+			.UseMauiCommunityToolkit()
 			.ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -38,6 +40,7 @@ public static class MauiProgram
 			client.BaseAddress = new Uri("https://localhost:7118/api/v1/");
 		}).AddHttpMessageHandler<AuthHeaderHandler>();
 
+		builder.Services.AddTransientPopup<CalendarEventPopup, CalendarEventPopupViewModel>();
 #if DEBUG
 		builder.AddServiceDefaults();
 		builder.Logging.AddDebug();

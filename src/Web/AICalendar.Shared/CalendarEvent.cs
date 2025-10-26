@@ -11,3 +11,8 @@ public class CalendarEvent
 
 	public ICollection<string> Attendees { get; set; } = new List<string>();
 }
+
+
+public record AiRequest(string Prompt);
+
+public record ProblemDetails(string Title);

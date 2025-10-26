@@ -3,14 +3,19 @@ using System.Collections.ObjectModel;
 using System.Net.Http.Json;
 using AICalendar.Client.Auth;
 using AICalendar.Shared;
+using CommunityToolkit.Maui;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.AI;
 using Syncfusion.Maui.Scheduler;
 
 namespace AICalendar.Client;
 
-public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IAuthService authService) : ObservableObject
+record DateRange(DateTime From, DateTime To);
+public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IAuthService authService, IPopupService popupService) : ObservableObject
 {
+	private DateRange dateRange = new(new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
+									  new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1));
 	public ObservableCollection<AiCalendarEvent> Appointments { get; set; } = [];
 
 	[RelayCommand]
@@ -31,24 +36,25 @@ public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IAu
 				return;
 			}
 
-			await Shell.Current.CurrentPage.DisplayAlertAsync("Appointment", appointment.Subject, "OK");
+			await popupService.ShowPopupAsync<CalendarEventPopup>(Shell.Current, null, new Dictionary<string, object>()
+			{
+				{"AiCalendarEvent", appointment}
+			});
+			await RefreshCalendar();
 		}
 	}
 
 	[RelayCommand]
-	async Task RefreshCalendar(SchedulerViewChangedEventArgs args)
+	async Task RefreshCalendar(SchedulerViewChangedEventArgs? args = null)
 	{
-		List<DateTime> dates =
-		[
-			new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
-			new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1)
-		];
+		if (args is not null)
+		{
+			dateRange = new DateRange(args.NewVisibleDates.First(), args.NewVisibleDates.Last());
+		}
 
-		var from = args.NewVisibleDates is not null && args.NewVisibleDates.Count > 0 ? args.NewVisibleDates.First() : dates[0];
-		var to = args.NewVisibleDates is not null && args.NewVisibleDates.Count>0? args.NewVisibleDates.Last() : dates[1];
 		Appointments.Clear();
 		var httpClient = httpClientFactory.CreateClient("AuthClient");
-		var calendarEvents = await httpClient.GetFromJsonAsync<List<CalendarEvent>>($"events?from={from:O}&to={to:O}") ?? [];
+		var calendarEvents = await httpClient.GetFromJsonAsync<List<CalendarEvent>>($"events?from={dateRange.From:O}&to={dateRange.To:O}") ?? [];
 		foreach (var calendarEvent in calendarEvents)
 		{
 			Appointments.Add(new AiCalendarEvent
@@ -61,6 +67,35 @@ public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IAu
 				Attendees = calendarEvent.Attendees
 			});
 		}
+	}
+
+	[RelayCommand]
+	async Task CreateEvent()
+	{
+		var prompt = await Shell.Current.CurrentPage.DisplayPromptAsync("Create event", "Enter event details", initialValue: "Schedule an event to user with email 'test@user.com' on 26/10/2025 from 15:00 till 16:30 with title 'Coffee break'");
+		if (string.IsNullOrEmpty(prompt))
+		{
+			return;
+		}
+
+		var response = string.Empty;
+		var httpClient = httpClientFactory.CreateClient("AuthClient");
+		var result = await httpClient.PostAsJsonAsync("ai", new AiRequest(prompt));
+		if (!result.IsSuccessStatusCode)
+		{
+			var problemDetails = await result.Content.ReadFromJsonAsync<ProblemDetails>();
+			response = problemDetails?.Title;
+			await Shell.Current.CurrentPage.DisplayAlertAsync("Error has occured", response, "OK");
+			return;
+		}
+
+		await foreach (var update in result.Content.ReadFromJsonAsAsyncEnumerable<ChatResponseUpdate>())
+		{
+			response += update;
+		}
+
+		await Shell.Current.CurrentPage.DisplayAlertAsync("Congratulations!", response, "OK");
+		await RefreshCalendar();
 	}
 }
 
