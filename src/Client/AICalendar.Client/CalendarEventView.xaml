@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:shared="clr-namespace:AICalendar.Shared;assembly=AICalendar.Shared"
+             xmlns:scheduler="http://schemas.syncfusion.com/maui"
+             xmlns:global="http://schemas.microsoft.com/dotnet/maui/global"
+             x:Class="AICalendar.Client.CalendarEventView"
+             x:DataType="global:AiCalendarEvent">
+	<VerticalStackLayout
+		Padding="15,0,0,0"
+		HorizontalOptions="Fill"
+		VerticalOptions="Fill">
+		<Label FontAttributes="Bold"
+			   FontSize="Medium">
+			<Label.FormattedText>
+				<FormattedString>
+					<Span Text="{Binding StartTime, StringFormat='{0:MM/dd HH\\:mm}'}"
+						  TextColor="Black"/>
+					<Span Text=" - "/>
+					<Span Text="{Binding Subject}"/>
+				</FormattedString>
+			</Label.FormattedText>
+		</Label>
+		<Label
+			FontSize="Small"
+			LineBreakMode="WordWrap"
+			Text="{Binding OrganizerId}"/>
+		<VerticalStackLayout.GestureRecognizers>
+			<TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+		</VerticalStackLayout.GestureRecognizers>
+	</VerticalStackLayout>
+</ContentView>

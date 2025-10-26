@@ -5,7 +5,7 @@ public class CalendarEvent
 	public Guid Id { get; init; }
 	public DateTime Start { get; init; }
 	public DateTime End { get; init; }
-	public string? Title { get; set; }
+	public string Title { get; set; } = null!;
 	public Guid OrganizerId { get; set; }
 	public User Organizer { get; set; } = null!;
 

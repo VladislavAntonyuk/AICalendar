@@ -15,8 +15,8 @@
 		<RootNamespace>AICalendar.Client</RootNamespace>
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
+
+		<LangVersion>preview</LangVersion>
 
 		<!-- Display name -->
 		<ApplicationTitle>AICalendar</ApplicationTitle>
@@ -57,9 +57,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <EmbeddedResource Include="appsettings.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0-rc.2.25502.107" />
-		<PackageReference Include="Plugin.Maui.Calendar" Version="2.0.10" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0-rc.2.25502.107" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.0-rc.2.25502.107" />
+		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.78.0" />
+		<PackageReference Include="Syncfusion.Maui.Scheduler" Version="31.2.3" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
 	</ItemGroup>
 
 	<ItemGroup>

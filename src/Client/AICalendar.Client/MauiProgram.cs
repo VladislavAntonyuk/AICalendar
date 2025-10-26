@@ -1,5 +1,9 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using AICalendar.Client.Auth;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Syncfusion.Maui.Core.Hosting;
 
 namespace AICalendar.Client;
 
@@ -8,6 +12,9 @@ public static class MauiProgram
 	public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
+
+		Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1JFaF5cXGRCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdmWH9cdnRcRWZfVUNzXENWYEg=");
+		builder.ConfigureSyncfusionCore();
 		builder
 			.UseMauiApp<App>()
 			.ConfigureFonts(fonts =>
@@ -16,12 +23,20 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
 
+		builder.Configuration.AddJsonFile(new EmbeddedFileProvider(typeof(App).Assembly, typeof(App).Namespace), "appsettings.json", optional: false, false);
 
 		builder.Services.AddSingleton<MainPageViewModel>();
-		builder.Services.AddSingleton(s => new HttpClient()
+		builder.Services.AddSingleton<AuthPageViewModel>();
+		builder.Services.AddOptions<AzureAdConfiguration>()
+		        .Configure<IConfiguration>((options, configuration) =>
+			                                   configuration.Bind(AzureAdConfiguration.SectionName, options));
+
+		builder.Services.AddSingleton<IAuthService, AuthService>();
+		builder.Services.AddTransient<AuthHeaderHandler>();
+		builder.Services.AddHttpClient("AuthClient", client =>
 		{
-			BaseAddress = new Uri("https://localhost:7118/api/v1/")
-		});
+			client.BaseAddress = new Uri("https://localhost:7118/api/v1/");
+		}).AddHttpMessageHandler<AuthHeaderHandler>();
 
 #if DEBUG
 		builder.AddServiceDefaults();

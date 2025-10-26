@@ -40,8 +40,8 @@ builder.AddProject<AICalendar_WebApp>("webfrontend")
 	   .WithReference(cache)
 	   .WaitFor(cache);
 
-//builder.AddProject<Projects.AICalendar_Client>("aicalendar-client")
-//       .WithReference(apiService)
-//       .WaitFor(apiService);
+builder.AddProject<Projects.AICalendar_Client>("aicalendar-client")
+	   .WithReference(apiService)
+	   .WaitFor(apiService);
 
 await builder.Build().RunAsync();
