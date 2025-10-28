@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using AICalendar.Shared;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
 namespace AICalendar.WebApp.Components;
@@ -9,12 +10,17 @@ public partial class CalendarEventDetails(IHttpClientFactory httpClientFactory) 
 	private IMudDialogInstance? MudDialog { get; set; }
 
 	[Parameter]
-	public CalendarEventItem CalendarEvent { get; set; } = new CalendarEventItem();
+	public required GetEventResponse CalendarEvent { get; set; }
 
 	private async Task CancelEvent()
 	{
 		var httpClient = httpClientFactory.CreateClient("AICalendarAPI");
-		await httpClient.DeleteAsync($"events/{CalendarEvent.Identifier}");
+		await httpClient.DeleteAsync($"events/{CalendarEvent.Id}");
 		MudDialog?.Close();
+	}
+
+	private void Close()
+	{
+		MudDialog?.Cancel();
 	}
 }

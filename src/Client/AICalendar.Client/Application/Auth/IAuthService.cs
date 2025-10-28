@@ -1,6 +1,7 @@
-﻿using Microsoft.Identity.Client;
+﻿using AICalendar.Client.Infrastructure.OperationResult;
+using Microsoft.Identity.Client;
 
-namespace AICalendar.Client.Auth;
+namespace AICalendar.Client.Application.Auth;
 
 public interface IAuthService
 {

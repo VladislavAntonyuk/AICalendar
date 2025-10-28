@@ -1,8 +1,9 @@
-﻿using AICalendar.Client.Auth;
+﻿using AICalendar.Client.Application.Auth;
+using AICalendar.Client.Application.Calendar.EventDetails;
+using AICalendar.Client.ServiceDefaults;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Syncfusion.Maui.Core.Hosting;
 
@@ -12,35 +13,28 @@ public static class MauiProgram
 {
 	public static MauiApp CreateMauiApp()
 	{
-		var builder = MauiApp.CreateBuilder();
-
 		Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1JFaF5cXGRCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdmWH9cdnRcRWZfVUNzXENWYEg=");
-		builder.ConfigureSyncfusionCore();
+
+		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
 			.UseMauiCommunityToolkit()
-			.ConfigureFonts(fonts =>
-			{
-				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-			});
+			.ConfigureSyncfusionCore();
 
 		builder.Configuration.AddJsonFile(new EmbeddedFileProvider(typeof(App).Assembly, typeof(App).Namespace), "appsettings.json", optional: false, false);
 
-		builder.Services.AddSingleton<MainPageViewModel>();
-		builder.Services.AddSingleton<AuthPageViewModel>();
-		builder.Services.AddOptions<AzureAdConfiguration>()
-		        .Configure<IConfiguration>((options, configuration) =>
-			                                   configuration.Bind(AzureAdConfiguration.SectionName, options));
+		builder.Services.AddSingleton<Application.Calendar.Main.MainPageViewModel>();
+		builder.Services.AddSingleton<Application.Auth.AuthPageViewModel>();
+		builder.Services.Configure<AzureAdConfiguration>(builder.Configuration.GetSection(AzureAdConfiguration.SectionName));
 
 		builder.Services.AddSingleton<IAuthService, AuthService>();
 		builder.Services.AddTransient<AuthHeaderHandler>();
 		builder.Services.AddHttpClient("AuthClient", client =>
 		{
-			client.BaseAddress = new Uri("https://localhost:7118/api/v1/");
+			client.BaseAddress = new Uri("https://apiservice/api/v1/");
 		}).AddHttpMessageHandler<AuthHeaderHandler>();
 
-		builder.Services.AddTransientPopup<CalendarEventPopup, CalendarEventPopupViewModel>();
+		builder.Services.AddTransientPopup<CalendarEventPopup, Application.Calendar.EventDetails.CalendarEventPopupViewModel>();
 #if DEBUG
 		builder.AddServiceDefaults();
 		builder.Logging.AddDebug();

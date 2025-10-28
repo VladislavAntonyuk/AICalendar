@@ -1,8 +1,6 @@
 ﻿using CommunityToolkit.Maui.Views;
-using System.Windows.Input;
-using AICalendar.Shared;
 
-namespace AICalendar.Client;
+namespace AICalendar.Client.Application.Calendar.EventDetails;
 
 public partial class CalendarEventPopup : Popup
 {

@@ -4,36 +4,34 @@
              xmlns:global="http://schemas.microsoft.com/dotnet/maui/global"
              xmlns:shared="clr-namespace:AICalendar.Shared;assembly=AICalendar.Shared"
              xmlns:scheduler="http://schemas.syncfusion.com/maui"
-             x:Class="AICalendar.Client.MainPage"
+             xmlns:main="clr-namespace:AICalendar.Client.Application.Calendar.Main"
+             x:Class="AICalendar.Client.Application.Calendar.MainPage"
              Shell.FlyoutBehavior="Disabled"
-             x:DataType="global:MainPageViewModel"
+             x:DataType="main:MainPageViewModel"
              x:Name="HomePage">
 
-	<ScrollView>
-		<Grid RowSpacing="10"
-		      RowDefinitions="Auto, *">
-			<Button Text="Logout"
-					Grid.Row="0"
-			        Command="{Binding LogoutCommand}"/>
+	<ContentPage.ToolbarItems>
+		<ToolbarItem Text="{Binding Username}"></ToolbarItem>
+		<ToolbarItem Text="Logout"
+		             Command="{Binding LogoutCommand}"/>
+	</ContentPage.ToolbarItems>
 
-			<scheduler:SfScheduler
-				BackgroundColor="Gray"
-					Grid.Row="1"
+	<Grid>
+		<scheduler:SfScheduler
+					BackgroundColor="Gray"
 					View="Month"
 					AllowAppointmentDrag="False"
 					AppointmentsSource="{Binding Appointments}"
 					TappedCommand="{Binding TappedCommand}"
 					ViewChangedCommand="{Binding RefreshCalendarCommand}"/>
 
-			<Button
-				Grid.Row="1"
+		<Button
 				HorizontalOptions="End"
 				VerticalOptions="End"
 				Margin="0 0 30 30"
 				Text ="+"
 				Command="{Binding CreateEventCommand}"/>
 
-		</Grid>
-	</ScrollView>
+	</Grid>
 
 </ContentPage>

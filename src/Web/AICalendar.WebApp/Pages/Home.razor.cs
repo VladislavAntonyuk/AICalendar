@@ -22,21 +22,23 @@ public partial class Home(IHttpClientFactory httpClientFactory, IDialogService d
 	{
 		currentDateRange = dateRange;
 		var httpClient = httpClientFactory.CreateClient("AICalendarAPI");
-		var calendarEvents = await httpClient.GetFromJsonAsync<List<CalendarEvent>>($"events?from={dateRange.Start.GetValueOrDefault():yyyy-MM-dd}&to={dateRange.End.GetValueOrDefault():yyyy-MM-dd}") ?? [];
+		var calendarEvents = await httpClient.GetFromJsonAsync<List<GetEventsResponse>>($"events?from={dateRange.Start.GetValueOrDefault():yyyy-MM-dd}&to={dateRange.End.GetValueOrDefault():yyyy-MM-dd}") ?? [];
 		events = calendarEvents.Select(MapCalendarEventItem).ToList();
 	}
 
 	private async Task EventClicked(CalendarEventItem obj)
 	{
 		var httpClient = httpClientFactory.CreateClient("AICalendarAPI");
-		var calendarEvent = await httpClient.GetFromJsonAsync<CalendarEvent>($"events/{obj.Identifier}");
+		var calendarEvent = await httpClient.GetFromJsonAsync<GetEventResponse>($"events/{obj.Identifier}");
 		if (calendarEvent is not null)
 		{
-			var parameters = new DialogParameters { { nameof(CalendarEventDetails.CalendarEvent), MapCalendarEventItem(calendarEvent) } };
-			var dialog = await dialogService.ShowAsync<CalendarEventDetails>(calendarEvent.Title, parameters);
-			await dialog.Result;
-
-			await RefreshCalendar();
+			var parameters = new DialogParameters { { nameof(CalendarEventDetails.CalendarEvent), calendarEvent } };
+			var dialog = await dialogService.ShowAsync<CalendarEventDetails>(calendarEvent.Title, parameters, new DialogOptions(){CloseButton = false});
+			var result = await dialog.Result;
+			if (result is not null && !result.Canceled)
+			{
+				await RefreshCalendar();
+			}
 		}
 	}
 
@@ -62,14 +64,13 @@ public partial class Home(IHttpClientFactory httpClientFactory, IDialogService d
 
 	private string GetColor(Color color) => $"var(--mud-palette-{color.ToDescriptionString()})";
 
-	private CalendarEventItem MapCalendarEventItem(CalendarEvent calendarEvent) => new CalendarEventItem
+	private CalendarEventItem MapCalendarEventItem(GetEventsResponse calendarEvent) => new CalendarEventItem
 	{
 		Identifier = calendarEvent.Id,
 		OrganizerId = calendarEvent.OrganizerId,
-		Attendees = calendarEvent.Attendees,
 		Start = calendarEvent.Start,
 		End = calendarEvent.End,
-		Text = calendarEvent.Title ?? string.Empty
+		Text = calendarEvent.Title
 	};
 
 	private async Task RefreshCalendar()

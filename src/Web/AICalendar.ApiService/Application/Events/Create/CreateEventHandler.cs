@@ -1,4 +1,5 @@
 ﻿using AICalendar.ApiService.Infrastructure.Database;
+using AICalendar.ApiService.Infrastructure.Database.Entities;
 using AICalendar.ApiService.Infrastructure.Results;
 using AICalendar.Shared;
 using Microsoft.EntityFrameworkCore;
@@ -7,14 +8,14 @@ namespace AICalendar.ApiService.Application.Events.Create;
 
 internal sealed class CreateEventHandler(AiCalendarDbContext context)
 {
-	public async Task<Result<CreateEvent.ResponseContent>> Handle(Guid currentUserId,
-		CreateEvent.Request request,
+	public async Task<Result<CreateEventResponse>> Handle(Guid currentUserId,
+		CreateEventRequest request,
 		CancellationToken cancellationToken = default)
 	{
 		var attendees = request.Attendees.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
 		if (await HasOverlaps(attendees, request.Start, request.End))
 		{
-			return Result.Failure<CreateEvent.ResponseContent>(EventsErrors.Conflict());
+			return Result.Failure<CreateEventResponse>(EventsErrors.Conflict());
 		}
 
 		var model = new CalendarEvent()
@@ -29,7 +30,7 @@ internal sealed class CreateEventHandler(AiCalendarDbContext context)
 
 		context.Events.Add(model);
 		await context.SaveChangesAsync(cancellationToken);
-		return new CreateEvent.ResponseContent(model.Id);
+		return new CreateEventResponse(model.Id);
 	}
 
 	private async Task<bool> HasOverlaps(List<string> attendees, DateTime from, DateTime to)

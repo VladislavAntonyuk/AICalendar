@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <toolkit:Popup
- xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
- xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
- xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
- xmlns:global="http://schemas.microsoft.com/dotnet/maui/global"
- xmlns:system="clr-namespace:System;assembly=System.Runtime"
- x:Class="AICalendar.Client.CalendarEventPopup"
- x:DataType="global:CalendarEventPopupViewModel"
- BackgroundColor="Gray">
+	 xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	 xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+	 xmlns:global="http://schemas.microsoft.com/dotnet/maui/global"
+	 xmlns:system="clr-namespace:System;assembly=System.Runtime"
+	 xmlns:eventDetails="clr-namespace:AICalendar.Client.Application.Calendar.EventDetails"
+	 x:Class="AICalendar.Client.Application.Calendar.EventDetails.CalendarEventPopup"
+	 x:DataType="eventDetails:CalendarEventPopupViewModel"
+	 BackgroundColor="Gray">
 	<VerticalStackLayout Spacing="16">
 		<Label>
 			<Label.FormattedText>
 				<FormattedString>
-					<Span FontSize="18" Text="{Binding Event.Subject}"></Span>
+					<Span FontSize="18" Text="{Binding Event.Title}"></Span>
 					<Span FontSize="18" Text=" by "></Span>
-					<Span FontSize="18" Text="{Binding Event.OrganizerId}"></Span>
+					<Span FontSize="18" Text="{Binding Event.Organizer.Email}"></Span>
 				</FormattedString>
 			</Label.FormattedText>
 		</Label>
 		<Label>
 			<Label.FormattedText>
 				<FormattedString>
-					<Span Text="{Binding Event.StartTime}"></Span>
+					<Span Text="{Binding Event.Start}"></Span>
 					<Span Text=" - "></Span>
-					<Span Text="{Binding Event.EndTime}"></Span>
+					<Span Text="{Binding Event.End}"></Span>
 				</FormattedString>
 			</Label.FormattedText>
 		</Label>

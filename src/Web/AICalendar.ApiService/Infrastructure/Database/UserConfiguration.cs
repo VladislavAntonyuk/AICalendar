@@ -1,4 +1,4 @@
-﻿using AICalendar.Shared;
+﻿using AICalendar.ApiService.Infrastructure.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

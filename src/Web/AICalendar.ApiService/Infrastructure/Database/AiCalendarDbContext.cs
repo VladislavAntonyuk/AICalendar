@@ -1,6 +1,5 @@
-﻿using AICalendar.Shared;
+﻿using AICalendar.ApiService.Infrastructure.Database.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 
 namespace AICalendar.ApiService.Infrastructure.Database;
 
@@ -17,13 +16,4 @@ public sealed class AiCalendarDbContext(DbContextOptions<AiCalendarDbContext> op
 
 #if DEBUG
 // dotnet ef migrations add "Initial" -o "Infrastructure/Database/Migrations"
-public class PlacesDbContextFactory : IDesignTimeDbContextFactory<AiCalendarDbContext>
-{
-	public AiCalendarDbContext CreateDbContext(string[] args)
-	{
-		return new AiCalendarDbContext(new DbContextOptionsBuilder<AiCalendarDbContext>()
-		                               .UseSqlServer("Host=localhost;Database=ai-calendar;Username=sa;Password=password")
-		                               .Options);
-	}
-}
 #endif

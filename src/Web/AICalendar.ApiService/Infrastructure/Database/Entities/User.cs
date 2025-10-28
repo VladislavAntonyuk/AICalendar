@@ -1,4 +1,4 @@
-﻿namespace AICalendar.Shared;
+﻿namespace AICalendar.ApiService.Infrastructure.Database.Entities;
 
 public sealed class User
 {

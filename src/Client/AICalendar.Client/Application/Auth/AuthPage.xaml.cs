@@ -1,4 +1,4 @@
-﻿namespace AICalendar.Client;
+﻿namespace AICalendar.Client.Application.Auth;
 
 public partial class AuthPage : ContentPage
 {

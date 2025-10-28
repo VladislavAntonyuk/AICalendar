@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using AICalendar.ApiService.Infrastructure.Extensions;
 using AICalendar.ApiService.Infrastructure.Results;
+using AICalendar.Shared;
 
 namespace AICalendar.ApiService.Application.Events.Create;
 
@@ -16,7 +17,7 @@ internal static class CreateEvent
 	}
 
 	private static async Task<IResult> Handler(
-		Request? request,
+		CreateEventRequest? request,
 		ClaimsPrincipal claims,
 		CreateEventHandler handler,
 		CancellationToken cancellationToken)
@@ -29,14 +30,4 @@ internal static class CreateEvent
 		var result = await handler.Handle(claims.GetUserId(), request, cancellationToken);
 		return result.Match(Results.Ok, ApiResults.Problem);
 	}
-
-	internal sealed class Request
-	{
-		public DateTime Start { get; init; }
-		public DateTime End { get; init; }
-		public string? Title { get; set; }
-		public ICollection<string> Attendees { get; set; } = new List<string>();
-	}
-
-	internal record ResponseContent(Guid Id);
 }

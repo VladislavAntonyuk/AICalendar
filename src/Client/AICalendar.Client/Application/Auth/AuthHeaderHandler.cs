@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Headers;
 
-namespace AICalendar.Client.Auth;
+namespace AICalendar.Client.Application.Auth;
 
 internal class AuthHeaderHandler(IAuthService authService) : DelegatingHandler
 {

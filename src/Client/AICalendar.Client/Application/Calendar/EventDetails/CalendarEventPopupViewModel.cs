@@ -1,17 +1,18 @@
-﻿using CommunityToolkit.Maui;
+﻿using AICalendar.Shared;
+using CommunityToolkit.Maui;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-namespace AICalendar.Client;
+namespace AICalendar.Client.Application.Calendar.EventDetails;
 
 public partial class CalendarEventPopupViewModel(IHttpClientFactory factory, IPopupService popupService) : ObservableObject, IQueryAttributable
 {
 	[ObservableProperty]
-	public partial AiCalendarEvent? Event { get; set; }
+	public partial GetEventResponse? Event { get; set; }
 
 	public void ApplyQueryAttributes(IDictionary<string, object> query)
 	{
-		if (query.TryGetValue(nameof(AiCalendarEvent), out var eventObj) && eventObj is AiCalendarEvent eventModel)
+		if (query.TryGetValue(nameof(Event), out var eventObj) && eventObj is GetEventResponse eventModel)
 		{
 			Event = eventModel;
 		}

@@ -1,7 +1,7 @@
-﻿using System.Collections;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Net.Http.Json;
-using AICalendar.Client.Auth;
+using AICalendar.Client.Application.Auth;
+using AICalendar.Client.Application.Calendar.EventDetails;
 using AICalendar.Shared;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -9,14 +9,16 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.AI;
 using Syncfusion.Maui.Scheduler;
 
-namespace AICalendar.Client;
+namespace AICalendar.Client.Application.Calendar.Main;
 
-record DateRange(DateTime From, DateTime To);
-public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IAuthService authService, IPopupService popupService) : ObservableObject
+public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IAuthService authService, IPopupService popupService) : ObservableObject, IQueryAttributable
 {
 	private DateRange dateRange = new(new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
 									  new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1));
 	public ObservableCollection<AiCalendarEvent> Appointments { get; set; } = [];
+
+	[ObservableProperty]
+	public partial string? Username { get; set; }
 
 	[RelayCommand]
 	async Task Logout()
@@ -26,19 +28,27 @@ public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IAu
 	}
 
 	[RelayCommand]
-	async Task Tapped(SchedulerTappedEventArgs calendarEvent)
+	async Task Tapped(SchedulerTappedEventArgs eventArgs)
 	{
-		if (calendarEvent.Element == SchedulerElement.Appointment)
+		if (eventArgs.Element == SchedulerElement.Appointment)
 		{
-			var appointment = calendarEvent.Appointments.OfType<AiCalendarEvent>().FirstOrDefault();
+			var appointment = eventArgs.Appointments.OfType<AiCalendarEvent>().FirstOrDefault();
 			if (appointment is null)
 			{
 				return;
 			}
 
+			var httpClient = httpClientFactory.CreateClient("AuthClient");
+			var calendarEvent = await httpClient.GetFromJsonAsync<GetEventResponse>($"events/{appointment.Id}");
+			if (calendarEvent is null)
+			{
+				await RefreshCalendar();
+				return;
+			}
+
 			await popupService.ShowPopupAsync<CalendarEventPopup>(Shell.Current, null, new Dictionary<string, object>()
 			{
-				{"AiCalendarEvent", appointment}
+				{nameof(CalendarEventPopupViewModel.Event), calendarEvent}
 			});
 			await RefreshCalendar();
 		}
@@ -54,7 +64,7 @@ public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IAu
 
 		Appointments.Clear();
 		var httpClient = httpClientFactory.CreateClient("AuthClient");
-		var calendarEvents = await httpClient.GetFromJsonAsync<List<CalendarEvent>>($"events?from={dateRange.From:O}&to={dateRange.To:O}") ?? [];
+		var calendarEvents = await httpClient.GetFromJsonAsync<List<GetEventsResponse>>($"events?from={dateRange.From:O}&to={dateRange.To:O}") ?? [];
 		foreach (var calendarEvent in calendarEvents)
 		{
 			Appointments.Add(new AiCalendarEvent
@@ -63,8 +73,7 @@ public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IAu
 				Subject = calendarEvent.Title,
 				StartTime = calendarEvent.Start,
 				EndTime = calendarEvent.End,
-				OrganizerId = calendarEvent.OrganizerId,
-				Attendees = calendarEvent.Attendees
+				OrganizerId = calendarEvent.OrganizerId
 			});
 		}
 	}
@@ -72,7 +81,11 @@ public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IAu
 	[RelayCommand]
 	async Task CreateEvent()
 	{
-		var prompt = await Shell.Current.CurrentPage.DisplayPromptAsync("Create event", "Enter event details", initialValue: "Schedule an event to user with email 'test@user.com' on 26/10/2025 from 15:00 till 16:30 with title 'Coffee break'");
+		var prompt = await Shell.Current.CurrentPage.DisplayPromptAsync(
+			"Create event",
+			"Enter event details",
+			initialValue: $"Schedule an event to user with email 'test@user.com' on {DateOnly.FromDateTime(DateTime.Now)} from 15:00 till 16:30 with title 'Coffee break'");
+
 		if (string.IsNullOrEmpty(prompt))
 		{
 			return;
@@ -97,10 +110,12 @@ public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IAu
 		await Shell.Current.CurrentPage.DisplayAlertAsync("Congratulations!", response, "OK");
 		await RefreshCalendar();
 	}
-}
 
-public class AiCalendarEvent : SchedulerAppointment
-{
-	public Guid OrganizerId { get; set; }
-	public ICollection<string> Attendees { get; set; } = [];
+	public void ApplyQueryAttributes(IDictionary<string, object> query)
+	{
+		if (query.TryGetValue("username", out var usernameObject) && usernameObject is string username)
+		{
+			Username = username;
+		}
+	}
 }

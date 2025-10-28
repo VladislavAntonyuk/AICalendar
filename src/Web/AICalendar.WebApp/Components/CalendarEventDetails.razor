@@ -4,13 +4,22 @@
 	<TitleContent>
 		<MudText Typo="Typo.h6">
 			<MudIcon Icon="@Icons.Material.Filled.EditCalendar" Class="mr-3 mb-n1" />
-			@CalendarEvent.Text
+			@CalendarEvent.Title by @CalendarEvent.Organizer.Email
+		</MudText>
+		<MudText Typo="Typo.body1">
+			@CalendarEvent.Start - @CalendarEvent.End
 		</MudText>
 	</TitleContent>
 	<DialogContent>
-		<MudText>@string.Join(',', CalendarEvent.Attendees)</MudText>
+		<MudList T="string">
+			@foreach (var attendee in CalendarEvent.Attendees)
+			{
+				<MudListItem T="string" Text="@attendee"/>
+			}
+		</MudList>
 	</DialogContent>
 	<DialogActions>
-		<MudButton Color="Color.Error" OnClick="CancelEvent">Cancel event</MudButton>
+		<MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="CancelEvent">Cancel event</MudButton>
+		<MudButton Color="Color.Secondary" Variant="Variant.Filled" OnClick="Close">Close</MudButton>
 	</DialogActions>
 </MudDialog>

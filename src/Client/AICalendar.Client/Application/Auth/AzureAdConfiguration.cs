@@ -1,4 +1,4 @@
-﻿namespace AICalendar.Client.Auth;
+﻿namespace AICalendar.Client.Application.Auth;
 
 internal class AzureAdConfiguration
 {

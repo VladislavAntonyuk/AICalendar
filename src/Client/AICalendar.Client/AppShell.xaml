@@ -4,15 +4,17 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:AICalendar.Client"
+    xmlns:auth="clr-namespace:AICalendar.Client.Application.Auth"
+    xmlns:calendar="clr-namespace:AICalendar.Client.Application.Calendar"
     Title="AICalendar.Client">
 
     <ShellContent
-        ContentTemplate="{DataTemplate local:AuthPage}"
+        ContentTemplate="{DataTemplate auth:AuthPage}"
         Route="AuthPage" />
 
     <ShellContent
         Title="AI Calendar"
-        ContentTemplate="{DataTemplate local:MainPage}"
+        ContentTemplate="{DataTemplate calendar:MainPage}"
         Route="MainPage" />
 
 </Shell>

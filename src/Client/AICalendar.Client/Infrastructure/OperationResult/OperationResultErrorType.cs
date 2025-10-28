@@ -1,4 +1,4 @@
-﻿namespace AICalendar.Client;
+﻿namespace AICalendar.Client.Infrastructure.OperationResult;
 
 public enum OperationResultErrorType
 {

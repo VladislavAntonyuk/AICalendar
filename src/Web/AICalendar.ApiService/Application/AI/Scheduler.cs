@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using AICalendar.Shared;
+using AICalendar.ApiService.Infrastructure.Database.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using ModelContextProtocol.Server;
 

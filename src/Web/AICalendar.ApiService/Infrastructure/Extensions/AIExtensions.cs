@@ -30,11 +30,3 @@ public static class AiExtensions
 		return builder;
 	}
 }
-
-public class AiSettings
-{
-	public required Uri Endpoint { get; init; }
-	public required string Key { get; init; }
-	public required string Model { get; init; }
-	public required Uri McpBaseUrl { get; init; }
-}

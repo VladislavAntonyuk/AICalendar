@@ -1,7 +1,8 @@
-﻿using Microsoft.Extensions.Options;
+﻿using AICalendar.Client.Infrastructure.OperationResult;
+using Microsoft.Extensions.Options;
 using Microsoft.Identity.Client;
 
-namespace AICalendar.Client.Auth;
+namespace AICalendar.Client.Application.Auth;
 
 internal class AuthService(
 	IOptions<AzureAdConfiguration> azureAdOptions) : IAuthService
@@ -61,7 +62,7 @@ internal class AuthService(
 	public async Task<OperationResult<AuthenticationResult>> SignInSilently(CancellationToken cancellationToken)
 	{
 		cancellationToken.ThrowIfCancellationRequested();
-		OperationResult<AuthenticationResult>? opResult = null;
+		OperationResult<AuthenticationResult>? opResult;
 
 		try
 		{

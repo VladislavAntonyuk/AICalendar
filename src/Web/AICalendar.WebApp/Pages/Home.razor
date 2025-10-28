@@ -7,7 +7,7 @@
 	<Authorized>
 		<MudTextField T="string" @bind-Value="@Prompt" />
 
-		<MudButton OnClick="SendRequest">Send request</MudButton>
+		<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SendRequest">Send request</MudButton>
 
 		<MudText>@Response</MudText>
 
@@ -21,7 +21,7 @@
 					<div style="background-color: @GetColor(Color.Secondary)">
 						<MudText Style="color: #ffffff;" Typo="Typo.body1" Align="Align.Center">@(calendarContext.Text)</MudText>
 					</div>
-					<div class="pa-2"><MudText Typo="Typo.body2">Attendees: @calendarContext.Attendees.Count</MudText></div>
+					<div class="pa-2"><MudText Typo="Typo.body2">@calendarContext.Start - @calendarContext.End</MudText></div>
 				</div>
 			</CellTemplate>
 		</MudCalendar>

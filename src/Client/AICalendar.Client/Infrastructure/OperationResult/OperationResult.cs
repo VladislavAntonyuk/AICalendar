@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace AICalendar.Client;
+namespace AICalendar.Client.Infrastructure.OperationResult;
 
 public record OperationResult<T>
 {
@@ -31,14 +31,4 @@ public record OperationResult<T>
 			}
 		};
 	}
-
-	public OperationResult<P> ConvertToNewOperationResult<P>(Func<T, P> convertResult) =>
-		IsSuccessful
-			? OperationResult<P>.Success(convertResult(Value))
-			: OperationResult<P>.Failed(Error.Message, Error.Type);
-
-	public override string ToString() =>
-		IsSuccessful
-			? "Success"
-			: $"Failed - ErrorType: {Error?.Type}, Message: {Error?.Message}";
 }
