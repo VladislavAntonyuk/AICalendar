@@ -1,0 +1,18 @@
+appId: com.vladislavantonyuk.aicalendar
+---
+- launchApp
+- tapOn: "Login"
+- inputText: "test@user.com"
+- tapOn: "Password"
+- inputText: "yourpassword"
+- assertVisible: "Logout"
+- tapOn: "+"
+- inputText: "Coffee break"
+- tapOn: "OK"
+- assertVisible: "Event Created"
+- tapOn: "Coffee break"
+- assertVisible: "Event Details"
+- tapOn: "Cancel Event"
+- assertVisible: "Event Cancelled"
+- tapOn: "Logout"
+- assertVisible: "Login"

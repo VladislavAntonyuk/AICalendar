@@ -1,6 +1,8 @@
-﻿using AICalendar.Client.Infrastructure.OperationResult;
+﻿using System.Net;
+using AICalendar.Client.Infrastructure.OperationResult;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Client;
+using Microsoft.Identity.Client.Extensions.Msal;
 
 namespace AICalendar.Client.Application.Auth;
 
@@ -10,7 +12,7 @@ internal class AuthService(
 	private readonly IPublicClientApplication authenticationClient = PublicClientApplicationBuilder.Create(azureAdOptions.Value.ClientId)
 		.WithAuthority(azureAdOptions.Value.Authority, validateAuthority: false)
 #if WINDOWS
-		.WithRedirectUri("http://localhost")
+		.WithRedirectUri($"{Uri.UriSchemeHttp}{Uri.SchemeDelimiter}{IPAddress.Loopback.ToString()}")
 #else
 		.WithRedirectUri($"msal{azureAdOptions.Value.ClientId}://auth")
 #endif
@@ -22,6 +24,9 @@ internal class AuthService(
 	public async Task LogoutAsync(CancellationToken cancellationToken)
 	{
 		cancellationToken.ThrowIfCancellationRequested();
+#if WINDOWS
+			await AttachTokenCache();
+#endif
 		var accounts = await authenticationClient.GetAccountsAsync();
 		foreach (var account in accounts)
 		{
@@ -32,10 +37,13 @@ internal class AuthService(
 	public async Task<OperationResult<AuthenticationResult>> SignInInteractively(CancellationToken cancellationToken)
 	{
 		cancellationToken.ThrowIfCancellationRequested();
-		OperationResult<AuthenticationResult>? opResult = null;
+		OperationResult<AuthenticationResult>? opResult;
 
 		try
 		{
+#if WINDOWS
+			await AttachTokenCache();
+#endif
 			var authResult = await authenticationClient.AcquireTokenInteractive(azureAdOptions.Value.Scopes)
 				.WithPrompt(Prompt.SelectAccount)
 				.ExecuteAsync(cancellationToken);
@@ -66,6 +74,9 @@ internal class AuthService(
 
 		try
 		{
+#if WINDOWS
+			await AttachTokenCache();
+#endif
 			IEnumerable<IAccount> accounts = await authenticationClient.GetAccountsAsync();
 			IAccount? firstAccount = accounts.FirstOrDefault();
 			if (firstAccount is not null)
@@ -95,4 +106,15 @@ internal class AuthService(
 
 		return opResult;
 	}
+
+#if WINDOWS
+	private async Task AttachTokenCache()
+	{
+		var cacheDir = Path.Join(Path.GetTempPath(), "AICalendar");
+		// Cache configuration and hook-up to public application. Refer to https://github.com/AzureAD/microsoft-authentication-extensions-for-dotnet/wiki/Cross-platform-Token-Cache#configuring-the-token-cache
+		var storageProperties = new StorageCreationPropertiesBuilder("AICalendar.cache", cacheDir).Build();
+		var msalCacheHelper = await MsalCacheHelper.CreateAsync(storageProperties);
+		msalCacheHelper.RegisterCache(authenticationClient.UserTokenCache);
+	}
+#endif
 }

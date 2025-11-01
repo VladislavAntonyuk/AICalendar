@@ -1,5 +1,4 @@
-﻿using AICalendar.Shared;
-using Heron.MudCalendar;
+﻿using Heron.MudCalendar;
 
 namespace AICalendar.WebApp.Components;
 

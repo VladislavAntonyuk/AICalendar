@@ -27,6 +27,7 @@ internal sealed class GetEventHandler(AiCalendarDbContext context)
 			calendarEvent.Start,
 			calendarEvent.End,
 			calendarEvent.Title,
+			calendarEvent.Description,
 			new Organizer(calendarEvent.Organizer.Id, calendarEvent.Organizer.Email),
 			calendarEvent.Attendees);
 	}

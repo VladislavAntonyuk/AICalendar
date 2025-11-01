@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace AICalendar.ApiService.Infrastructure.Database;
 
-public class PlacesDbContextFactory : IDesignTimeDbContextFactory<AiCalendarDbContext>
+public class AiCalendarDbContextFactory : IDesignTimeDbContextFactory<AiCalendarDbContext>
 {
 	public AiCalendarDbContext CreateDbContext(string[] args)
 	{

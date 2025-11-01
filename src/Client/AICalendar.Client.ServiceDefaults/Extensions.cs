@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Net.Security;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -83,7 +84,7 @@ public static class Extensions
 				{
 					return true;
 				}
-				return errors == System.Net.Security.SslPolicyErrors.None;
+				return errors == SslPolicyErrors.None;
 			}
 		});
 

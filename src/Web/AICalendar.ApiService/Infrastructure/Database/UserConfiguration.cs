@@ -17,9 +17,9 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
 			.HasForeignKey(e => e.OrganizerId)
 			.OnDelete(DeleteBehavior.Cascade);
 
-		builder.HasData(new User()
+		builder.HasData(new User
 		{
-			Id = Guid.Parse("48b828bd-8f7d-41e6-8872-02a783e6edc2"),
+			Id = Guid.Parse("4012d03e-edc0-42f1-8003-5bad4ec5c9b1"),
 			Email = "vlad.antonyuk@gmail.com"
 		});
 	}

@@ -1,7 +1,6 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿#nullable disable
 
-#nullable disable
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AICalendar.ApiService.Infrastructure.Database.Migrations
 {
@@ -30,7 +29,8 @@ namespace AICalendar.ApiService.Infrastructure.Database.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Start = table.Column<DateTime>(type: "datetime2", nullable: false),
                     End = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OrganizerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Attendees = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -48,7 +48,7 @@ namespace AICalendar.ApiService.Infrastructure.Database.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Email" },
-                values: new object[] { new Guid("48b828bd-8f7d-41e6-8872-02a783e6edc2"), "vlad.antonyuk@gmail.com" });
+                values: new object[] { new Guid("4012d03e-edc0-42f1-8003-5bad4ec5c9b1"), "vlad.antonyuk@gmail.com" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_OrganizerId",

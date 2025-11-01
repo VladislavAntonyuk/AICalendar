@@ -21,7 +21,7 @@ internal sealed class AiHandler(IChatClient client, IOptions<AiSettings> setting
 
 		var accessToken = await context.HttpContext.GetTokenAsync("access_token");
 		var mcpClient = await McpClient.CreateAsync(new HttpClientTransport(
-													  new HttpClientTransportOptions()
+													  new HttpClientTransportOptions
 													  {
 														  Endpoint = settings.Value.McpBaseUrl,
 														  Name = "AICalendar.ApiService",
@@ -33,7 +33,7 @@ internal sealed class AiHandler(IChatClient client, IOptions<AiSettings> setting
 		IList<McpClientTool> tools = await mcpClient.ListToolsAsync(cancellationToken: cancellationToken);
 
 		List<ChatMessage> messages = [new(ChatRole.User, prompt)];
-		var options = new ChatOptions() { Tools = [.. tools] };
+		var options = new ChatOptions { Tools = [.. tools] };
 		await foreach (var chunk in client.GetStreamingResponseAsync(messages, options, cancellationToken))
 		{
 			yield return chunk;

@@ -1,7 +1,7 @@
-﻿namespace AICalendar.ApiService.Infrastructure.Middleware;
-
-using Microsoft.AspNetCore.Diagnostics;
+﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+
+namespace AICalendar.ApiService.Infrastructure.Middleware;
 
 internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {

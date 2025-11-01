@@ -1,5 +1,6 @@
-﻿<CascadingAuthenticationState>
-	<Router AppAssembly="@typeof(App).Assembly" NotFoundPage="typeof(Pages.NotFound)">
+﻿@using AICalendar.WebApp.Pages
+<CascadingAuthenticationState>
+	<Router AppAssembly="@typeof(App).Assembly" NotFoundPage="typeof(NotFound)">
 		<Found Context="routeData">
 			<AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
 				<NotAuthorized>

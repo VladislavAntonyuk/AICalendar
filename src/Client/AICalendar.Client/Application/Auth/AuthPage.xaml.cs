@@ -8,12 +8,12 @@ public partial class AuthPage : ContentPage
 	{
 		InitializeComponent();
 		BindingContext = this.viewModel = viewModel;
+		Loaded += AuthPage_Loaded;
 	}
 
-	/// <inheritdoc />
-	protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+	private async void AuthPage_Loaded(object? sender, EventArgs e)
 	{
-		base.OnNavigatedTo(args);
+		Loaded -= AuthPage_Loaded;
 		await viewModel.InitializeAsync();
 	}
 }

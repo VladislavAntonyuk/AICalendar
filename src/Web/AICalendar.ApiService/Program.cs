@@ -1,6 +1,7 @@
 ﻿using AICalendar.ApiService.Application.AI;
 using AICalendar.ApiService.Application.Events;
 using AICalendar.ApiService.Application.User;
+using AICalendar.ApiService.Hubs;
 using AICalendar.ApiService.Infrastructure.Database;
 using AICalendar.ApiService.Infrastructure.Extensions;
 using AICalendar.ServiceDefaults;
@@ -51,6 +52,7 @@ builder.Services.AddCors(options =>
 builder.AddUsers();
 builder.AddEvents();
 builder.AddAi();
+builder.Services.AddSignalR();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
@@ -78,6 +80,7 @@ app.Map("/", () => "AI Calendar API. Created by Vladislav Antonyuk.");
 app.MapUserRoutes();
 app.MapEventRoutes();
 app.MapAiRoutes();
+app.MapHub<CalendarEventsHub>("/hubs/calendarEvents");
 
 app.MapMcp("/mcp").RequireAuthorization();
 

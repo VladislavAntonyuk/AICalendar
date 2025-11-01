@@ -1,6 +1,6 @@
-﻿namespace AICalendar.ApiService.Infrastructure.Middleware;
+﻿using System.Diagnostics;
 
-using System.Diagnostics;
+namespace AICalendar.ApiService.Infrastructure.Middleware;
 
 internal sealed class LogContextTraceLoggingMiddleware(RequestDelegate next)
 {

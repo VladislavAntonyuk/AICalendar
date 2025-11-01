@@ -11,6 +11,6 @@ public static class EventsErrors
 	
 	public static Error Conflict()
 	{
-		return Error.Conflict("Event.Conflict", $"The event conflict");
+		return Error.Conflict("Event.Conflict", "The event conflict");
 	}
 }

@@ -6,12 +6,13 @@ using AICalendar.Shared;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.AI;
 using Syncfusion.Maui.Scheduler;
 
 namespace AICalendar.Client.Application.Calendar.Main;
 
-public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IAuthService authService, IPopupService popupService) : ObservableObject, IQueryAttributable
+public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IAuthService authService, IPopupService popupService) : ObservableObject, IQueryAttributable, IAsyncDisposable
 {
 	private DateRange dateRange = new(new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
 									  new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1));
@@ -46,36 +47,45 @@ public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IAu
 				return;
 			}
 
-			await popupService.ShowPopupAsync<CalendarEventPopup>(Shell.Current, null, new Dictionary<string, object>()
+			await popupService.ShowPopupAsync<CalendarEventPopup>(Shell.Current, null, new Dictionary<string, object>
 			{
 				{nameof(CalendarEventPopupViewModel.Event), calendarEvent}
 			});
-			await RefreshCalendar();
 		}
 	}
 
 	[RelayCommand]
 	async Task RefreshCalendar(SchedulerViewChangedEventArgs? args = null)
 	{
-		if (args is not null)
+		if (isRefreshingSignalR) return;
+		try
 		{
-			dateRange = new DateRange(args.NewVisibleDates.First(), args.NewVisibleDates.Last());
+			isRefreshingSignalR = true;
+			if (args is not null)
+			{
+				dateRange = new DateRange(args.NewVisibleDates.First(), args.NewVisibleDates.Last());
+			}
+
+			var httpClient = httpClientFactory.CreateClient("AuthClient");
+			var calendarEvents = await httpClient.GetFromJsonAsync<List<GetEventsResponse>>($"events?from={dateRange.From:O}&to={dateRange.To:O}") ?? [];
+			Appointments.Clear();
+			foreach (var calendarEvent in calendarEvents)
+			{
+				Appointments.Add(new AiCalendarEvent
+				{
+					Id = calendarEvent.Id,
+					Subject = calendarEvent.Title,
+					StartTime = calendarEvent.Start,
+					EndTime = calendarEvent.End,
+					OrganizerId = calendarEvent.OrganizerId
+				});
+			}
+		}
+		finally
+		{
+			isRefreshingSignalR = false;
 		}
 
-		Appointments.Clear();
-		var httpClient = httpClientFactory.CreateClient("AuthClient");
-		var calendarEvents = await httpClient.GetFromJsonAsync<List<GetEventsResponse>>($"events?from={dateRange.From:O}&to={dateRange.To:O}") ?? [];
-		foreach (var calendarEvent in calendarEvents)
-		{
-			Appointments.Add(new AiCalendarEvent
-			{
-				Id = calendarEvent.Id,
-				Subject = calendarEvent.Title,
-				StartTime = calendarEvent.Start,
-				EndTime = calendarEvent.End,
-				OrganizerId = calendarEvent.OrganizerId
-			});
-		}
 	}
 
 	[RelayCommand]
@@ -108,14 +118,38 @@ public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IAu
 		}
 
 		await Shell.Current.CurrentPage.DisplayAlertAsync("Congratulations!", response, "OK");
-		await RefreshCalendar();
 	}
 
-	public void ApplyQueryAttributes(IDictionary<string, object> query)
+	public async void ApplyQueryAttributes(IDictionary<string, object> query)
 	{
 		if (query.TryGetValue("username", out var usernameObject) && usernameObject is string username)
 		{
 			Username = username;
+			await InitializeSignalRAsync(username);
+		}
+	}
+
+	private HubConnection? hubConnection;
+	private bool isRefreshingSignalR;
+
+	public async Task InitializeSignalRAsync(string userId)
+	{
+		hubConnection = new HubConnectionBuilder()
+			.WithUrl("https://localhost:7118/hubs/calendarEvents")
+			.Build();
+		hubConnection.On("CalendarEventChanged", async () =>
+		{
+			await RefreshCalendar();
+		});
+		await hubConnection.StartAsync();
+		await hubConnection.InvokeAsync("JoinUserGroup", userId);
+	}
+
+	public async ValueTask DisposeAsync()
+	{
+		if (hubConnection != null)
+		{
+			await hubConnection.DisposeAsync();
 		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
-using AICalendar.ApiService.Infrastructure.Database.Entities;
+using System.Net.Http.Headers;
+using AICalendar.Shared;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using ModelContextProtocol.Server;
 
@@ -9,7 +10,7 @@ namespace AICalendar.ApiService.Application.AI;
 public static class Scheduler
 {
 	[McpServerTool, Description("Schedules an event to users with emails on specific date and time with title")]
-	public static async Task<CalendarEvent?> Schedule(
+	public static async Task<GetEventResponse?> Schedule(
 		HttpClient httpClient,
 		IHttpContextAccessor httpContextAccessor,
 		string[] emails, DateTime from, DateTime to, string title)
@@ -22,17 +23,17 @@ public static class Scheduler
 			End = to,
 			Title = title
 		});
-		return await result.Content.ReadFromJsonAsync<CalendarEvent>();
+		return await result.Content.ReadFromJsonAsync<GetEventResponse>();
 	}
 
 	[McpServerTool, Description("Get list of events on specific time range.")]
-	public static async Task<List<CalendarEvent>> GetEvents(
+	public static async Task<List<GetEventsResponse>> GetEvents(
 		HttpClient httpClient,
 		IHttpContextAccessor httpContextAccessor,
 		DateTime from, DateTime to)
 	{
 		SetAuth(httpClient, httpContextAccessor);
-		var events = await httpClient.GetFromJsonAsync<List<CalendarEvent>>($"events?from={from:yyyy-MM-dd}&to={to:yyyy-MM-dd}");
+		var events = await httpClient.GetFromJsonAsync<List<GetEventsResponse>>($"events?from={from:yyyy-MM-dd}&to={to:yyyy-MM-dd}");
 		return events ?? [];
 	}
 
@@ -53,7 +54,7 @@ public static class Scheduler
 		var authHeader = httpContextAccessor.HttpContext?.Request.Headers.Authorization.ToString();
 		if (!string.IsNullOrEmpty(authHeader))
 		{
-			client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, authHeader.Split(' ').Last());
+			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, authHeader.Split(' ').Last());
 		}
 	}
 }

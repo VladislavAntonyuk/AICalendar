@@ -5,5 +5,6 @@ public record GetEventResponse(
 	DateTime Start,
 	DateTime End,
 	string Title,
+	string? Description,
 	Organizer Organizer,
 	ICollection<string> Attendees);
