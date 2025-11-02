@@ -9,20 +9,14 @@ namespace AICalendar.ApiService.Application.AI;
 [McpServerToolType]
 public static class Scheduler
 {
-	[McpServerTool, Description("Schedules an event to users with emails on specific date and time with title")]
+	[McpServerTool, Description("Schedules an event to users with emails on specific date and time with title and description (if provided)")]
 	public static async Task<GetEventResponse?> Schedule(
 		HttpClient httpClient,
 		IHttpContextAccessor httpContextAccessor,
-		string[] emails, DateTime from, DateTime to, string title)
+		string[] emails, DateTime from, DateTime to, string title, string? description)
 	{
 		SetAuth(httpClient, httpContextAccessor);
-		var result = await httpClient.PostAsJsonAsync("events", new
-		{
-			Attendees = emails,
-			Start = from,
-			End = to,
-			Title = title
-		});
+		var result = await httpClient.PostAsJsonAsync("events", new CreateEventRequest(from, to, title, emails) { Description = description });
 		return await result.Content.ReadFromJsonAsync<GetEventResponse>();
 	}
 

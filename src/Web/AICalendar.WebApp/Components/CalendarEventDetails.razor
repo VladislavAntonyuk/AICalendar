@@ -11,6 +11,14 @@
 		</MudText>
 	</TitleContent>
 	<DialogContent>
+		@if (!string.IsNullOrEmpty(CalendarEvent.Description))
+		{
+			<MudText Typo="Typo.body1">
+				@CalendarEvent.Description
+			</MudText>
+		}
+
+		<MudText Typo="Typo.subtitle1" Class="mt-4 mb-2">Attendees:</MudText>
 		<MudList T="string">
 			@foreach (var attendee in CalendarEvent.Attendees)
 			{

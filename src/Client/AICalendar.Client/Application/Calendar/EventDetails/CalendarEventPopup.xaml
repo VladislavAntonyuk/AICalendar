@@ -9,6 +9,9 @@
 	 x:Class="AICalendar.Client.Application.Calendar.EventDetails.CalendarEventPopup"
 	 x:DataType="eventDetails:CalendarEventPopupViewModel"
 	 BackgroundColor="Gray">
+	<toolkit:Popup.Resources>
+		<toolkit:IsStringNotNullOrEmptyConverter x:Key="IsStringNotNullOrEmptyConverter" />
+	</toolkit:Popup.Resources>
 	<VerticalStackLayout Spacing="16">
 		<Label>
 			<Label.FormattedText>
@@ -19,6 +22,7 @@
 				</FormattedString>
 			</Label.FormattedText>
 		</Label>
+
 		<Label>
 			<Label.FormattedText>
 				<FormattedString>
@@ -28,13 +32,20 @@
 				</FormattedString>
 			</Label.FormattedText>
 		</Label>
-		<CollectionView ItemsSource="{Binding Event.Attendees}">
+
+		<Label Text="{Binding Event.Description}"
+		       IsVisible="{Binding Event.Description, Converter={StaticResource IsStringNotNullOrEmptyConverter}}"/>
+
+		<CollectionView ItemsSource="{Binding Event.Attendees}"
+		                Header="Attendees"
+		                EmptyView="No attendees">
 			<CollectionView.ItemTemplate>
 				<DataTemplate x:DataType="system:String">
 					<Label Text="{Binding }" FontSize="14" />
 				</DataTemplate>
 			</CollectionView.ItemTemplate>
 		</CollectionView>
+
 		<Button Text="Cancel Event" Command="{Binding CancelEventCommand}" BackgroundColor="Red" TextColor="White" />
 		<Button Text="Close" Command="{Binding CloseCommand}" />
 	</VerticalStackLayout>
