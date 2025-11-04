@@ -8,10 +8,10 @@
     <File Path="README.md" />
   </Folder>
   <Folder Name="/src/">
-    <Project Path="src/Web/AICalendar.Shared/AICalendar.Shared.csproj" Id="addd9c9f-8420-4cba-93cf-0046c7f8b6bb" />
+    <Project Path="src/Web/AICalendar.Shared/AICalendar.Shared.csproj" />
   </Folder>
   <Folder Name="/src/Client/">
-    <Project Path="src/Client/AICalendar.Client.ServiceDefaults/AICalendar.Client.ServiceDefaults.csproj" Id="71250bb5-7411-4467-a767-169f632bfcde" />
+    <Project Path="src/Client/AICalendar.Client.ServiceDefaults/AICalendar.Client.ServiceDefaults.csproj" />
     <Project Path="src/Client/AICalendar.Client/AICalendar.Client.csproj" />
   </Folder>
   <Folder Name="/src/Web/">
