@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<toolkit:Popup
-	 xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-	 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-	 xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-	 xmlns:global="http://schemas.microsoft.com/dotnet/maui/global"
+<Popup
 	 xmlns:system="clr-namespace:System;assembly=System.Runtime"
 	 xmlns:eventDetails="clr-namespace:AICalendar.Client.Application.Calendar.EventDetails"
 	 x:Class="AICalendar.Client.Application.Calendar.EventDetails.CalendarEventPopup"
 	 x:DataType="eventDetails:CalendarEventPopupViewModel"
 	 BackgroundColor="Gray">
-	<toolkit:Popup.Resources>
-		<toolkit:IsStringNotNullOrEmptyConverter x:Key="IsStringNotNullOrEmptyConverter" />
-	</toolkit:Popup.Resources>
+	<Popup.Resources>
+		<IsStringNotNullOrEmptyConverter x:Key="IsStringNotNullOrEmptyConverter" />
+	</Popup.Resources>
 	<VerticalStackLayout Spacing="16">
 		<Label>
 			<Label.FormattedText>
@@ -49,4 +45,4 @@
 		<Button Text="Cancel Event" Command="{Binding CancelEventCommand}" BackgroundColor="Red" TextColor="White" />
 		<Button Text="Close" Command="{Binding CloseCommand}" />
 	</VerticalStackLayout>
-</toolkit:Popup>
+</Popup>

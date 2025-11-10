@@ -1,5 +1,4 @@
-﻿using AICalendar.Shared;
-using CommunityToolkit.Maui;
+﻿using CommunityToolkit.Maui;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -8,13 +7,23 @@ namespace AICalendar.Client.Application.Calendar.EventDetails;
 public partial class CalendarEventPopupViewModel(IHttpClientFactory factory, IPopupService popupService) : ObservableObject, IQueryAttributable
 {
 	[ObservableProperty]
-	public partial GetEventResponse? Event { get; set; }
+	public partial EventResponse Event { get; set; } = new();
 
 	public void ApplyQueryAttributes(IDictionary<string, object> query)
 	{
-		if (query.TryGetValue(nameof(Event), out var eventObj) && eventObj is GetEventResponse eventModel)
+		if (query.TryGetValue(nameof(Event), out var eventObj) &&
+			eventObj is Shared.GetEventResponse eventModel)
 		{
-			Event = eventModel;
+			Event = new EventResponse
+			{
+				Organizer = eventModel.Organizer,
+				Id = eventModel.Id,
+				Start = eventModel.Start,
+				End = eventModel.End,
+				Title = eventModel.Title,
+				Description = eventModel.Description,
+				Attendees = eventModel.Attendees
+			};
 		}
 	}
 
@@ -22,10 +31,7 @@ public partial class CalendarEventPopupViewModel(IHttpClientFactory factory, IPo
 	async Task CancelEvent()
 	{
 		var client = factory.CreateClient("AuthClient");
-		if (Event is not null)
-		{
-			await client.DeleteAsync($"events/{Event.Id}");
-		}
+		await client.DeleteAsync($"events/{Event.Id}");
 
 		await popupService.ClosePopupAsync(Shell.Current);
 	}
@@ -35,4 +41,15 @@ public partial class CalendarEventPopupViewModel(IHttpClientFactory factory, IPo
 	{
 		return popupService.ClosePopupAsync(Shell.Current);
 	}
+}
+
+public record EventResponse
+{
+	public Guid Id { get; init; }
+	public DateTime Start { get; init; }
+	public DateTime End { get; init; }
+	public string? Title { get; init; }
+	public string? Description { get; init; }
+	public Shared.Organizer? Organizer { get; init; }
+	public ICollection<string> Attendees { get; init; } = [];
 }

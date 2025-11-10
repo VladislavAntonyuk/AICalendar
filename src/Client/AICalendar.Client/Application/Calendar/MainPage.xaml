@@ -1,13 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:global="http://schemas.microsoft.com/dotnet/maui/global"
-             xmlns:shared="clr-namespace:AICalendar.Shared;assembly=AICalendar.Shared"
-             xmlns:scheduler="http://schemas.syncfusion.com/maui"
-             xmlns:main="clr-namespace:AICalendar.Client.Application.Calendar.Main"
-             x:Class="AICalendar.Client.Application.Calendar.MainPage"
+<ContentPage x:Class="AICalendar.Client.Application.Calendar.MainPage"
              Shell.FlyoutBehavior="Disabled"
-             x:DataType="main:MainPageViewModel"
+             x:DataType="MainPageViewModel"
              x:Name="HomePage">
 
 	<ContentPage.ToolbarItems>
@@ -17,7 +11,7 @@
 	</ContentPage.ToolbarItems>
 
 	<Grid>
-		<scheduler:SfScheduler
+		<SfScheduler
 					BackgroundColor="Gray"
 					View="Month"
 					AllowAppointmentDrag="False"
@@ -28,7 +22,7 @@
 		<Button
 				HorizontalOptions="End"
 				VerticalOptions="End"
-				Margin="0 0 30 30"
+				Margin="0, 0, 30, 30"
 				Text ="+"
 				Command="{Binding CreateEventCommand}"/>
 
