@@ -80,7 +80,7 @@ app.Map("/", () => "AI Calendar API. Created by Vladislav Antonyuk.");
 app.MapUserRoutes();
 app.MapEventRoutes();
 app.MapAiRoutes();
-app.MapHub<CalendarEventsHub>("/hubs/calendarEvents");
+app.MapHub<CalendarEventsHub>("/api/v1/hubs/calendarEvents");
 
 app.MapMcp("/mcp").RequireAuthorization();
 

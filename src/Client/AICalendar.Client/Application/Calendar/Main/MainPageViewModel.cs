@@ -8,11 +8,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Configuration;
 using Syncfusion.Maui.Scheduler;
 
 namespace AICalendar.Client.Application.Calendar.Main;
 
-public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IAuthService authService, IPopupService popupService) : ObservableObject, IQueryAttributable, IAsyncDisposable
+public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IDispatcher dispatcher, IAuthService authService, IPopupService popupService, IConfiguration configuration) : ObservableObject, IQueryAttributable, IAsyncDisposable
 {
 	private DateRange dateRange = new(new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
 									  new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1));
@@ -68,18 +69,22 @@ public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IAu
 
 			var httpClient = httpClientFactory.CreateClient("AuthClient");
 			var calendarEvents = await httpClient.GetFromJsonAsync<List<GetEventsResponse>>($"events?from={dateRange.From:O}&to={dateRange.To:O}") ?? [];
-			Appointments.Clear();
-			foreach (var calendarEvent in calendarEvents)
+
+			await dispatcher.DispatchAsync(() =>
 			{
-				Appointments.Add(new AiCalendarEvent
+				Appointments.Clear();
+				foreach (var calendarEvent in calendarEvents)
 				{
-					Id = calendarEvent.Id,
-					Subject = calendarEvent.Title,
-					StartTime = calendarEvent.Start,
-					EndTime = calendarEvent.End,
-					OrganizerId = calendarEvent.OrganizerId
-				});
-			}
+					Appointments.Add(new AiCalendarEvent
+					{
+						Id = calendarEvent.Id,
+						Subject = calendarEvent.Title,
+						StartTime = calendarEvent.Start,
+						EndTime = calendarEvent.End,
+						OrganizerId = calendarEvent.OrganizerId
+					});
+				}
+			});
 		}
 		finally
 		{
@@ -134,8 +139,15 @@ public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IAu
 
 	public async Task InitializeSignalRAsync(string userId)
 	{
+		if (hubConnection is not null)
+		{
+			return;
+		}
+
+		var baseUrl = configuration.GetValue<Uri>("ApiUrl");
+		var url = $"{baseUrl}hubs/calendarEvents";
 		hubConnection = new HubConnectionBuilder()
-			.WithUrl("https://localhost:7118/hubs/calendarEvents")
+			.WithUrl(url)
 			.Build();
 		hubConnection.On("CalendarEventChanged", async () =>
 		{

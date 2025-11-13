@@ -17,7 +17,24 @@
 					AllowAppointmentDrag="False"
 					AppointmentsSource="{Binding Appointments}"
 					TappedCommand="{Binding TappedCommand}"
-					ViewChangedCommand="{Binding RefreshCalendarCommand}"/>
+					ViewChangedCommand="{Binding RefreshCalendarCommand}">
+			<SfScheduler.MonthView>
+				<SchedulerMonthView AppointmentDisplayMode="Text">
+					<SchedulerMonthView.AppointmentTemplate>
+						<DataTemplate x:DataType="SchedulerAppointment">
+							<Border Background="{Binding Background}"
+							        StrokeShape="RoundRectangle 5">
+								<Label
+									AutomationId="{Binding Subject}"
+									Text="{Binding Subject}"
+									Margin="15, 0, 0, 0"
+									FontSize="12"/>
+							</Border>
+						</DataTemplate>
+					</SchedulerMonthView.AppointmentTemplate>
+				</SchedulerMonthView>
+			</SfScheduler.MonthView>
+		</SfScheduler>
 
 		<Button
 				HorizontalOptions="End"

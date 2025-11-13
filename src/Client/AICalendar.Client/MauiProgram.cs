@@ -28,12 +28,13 @@ public static class MauiProgram
 		builder.Services.AddSingleton<MainPageViewModel>();
 		builder.Services.AddSingleton<AuthPageViewModel>();
 		builder.Services.Configure<AzureAdConfiguration>(builder.Configuration.GetSection(AzureAdConfiguration.SectionName));
+		var baseUrl = builder.Configuration.GetValue<Uri>("ApiUrl");
 
 		builder.Services.AddSingleton<IAuthService, AuthService>();
 		builder.Services.AddTransient<AuthHeaderHandler>();
 		builder.Services.AddHttpClient("AuthClient", client =>
 		{
-			client.BaseAddress = new Uri("https://apiservice/api/v1/");
+			client.BaseAddress = baseUrl;
 		}).AddHttpMessageHandler<AuthHeaderHandler>();
 
 		builder.Services.AddTransientPopup<CalendarEventPopup, CalendarEventPopupViewModel>();

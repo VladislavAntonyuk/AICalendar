@@ -38,8 +38,43 @@ builder.AddProject<AICalendar_WebApp>("webfrontend")
 	   .WaitFor(apiService)
 	   .WithReference(cache)
 	   .WaitFor(cache);
+/*
+// To easily reach your local API project from the
+// emulator/Simulator/physical device, you can use the Dev Tunnels integration
+var publicDevTunnel = builder.AddDevTunnel("devtunnel-public")
+                             .WithAnonymousAccess()
+                             .WithReference(apiService.GetEndpoint("https"));
 
-builder.AddProject<Projects.AICalendar_Client>("aicalendar-client")
+// Add the .NET MAUI project resource
+var mauiapp = builder.AddMauiProject("aicalendar-client", @"..\..\Client\AICalendar.Client\AICalendar.Client.csproj");
+
+// Add MAUI app for Windows
+mauiapp.AddWindowsDevice()
+       .WithReference(apiService)
+       .WaitFor(apiService);
+
+// Add MAUI app for Mac Catalyst
+mauiapp.AddMacCatalystDevice()
+       .WithReference(apiService)
+       .WaitFor(apiService);
+
+// Add MAUI app for iOS running on the iOS Simulator (starts
+// a random one, or uses the currently started one)
+mauiapp.AddiOSSimulator()
+       .WithOtlpDevTunnel() // Needed to get the OpenTelemetry data to "localhost"
+       .WithReference(apiService, publicDevTunnel)// Needs a dev tunnel to reach "localhost"
+       .WaitFor(apiService)
+       .WaitFor(publicDevTunnel); 
+
+// Add MAUI app for Android running on the emulator with
+// default emulator (uses running or default emulator, needs to be started)
+mauiapp.AddAndroidEmulator()
+       .WithOtlpDevTunnel() // Needed to get the OpenTelemetry data to "localhost"
+       .WithReference(apiService, publicDevTunnel)// Needs a dev tunnel to reach "localhost"
+       .WaitFor(apiService)
+       .WaitFor(publicDevTunnel);
+*/
+builder.AddProject<AICalendar_Client>("aicalendar-client")
 	   .WithReference(apiService)
 	   .WaitFor(apiService);
 
