@@ -19,7 +19,7 @@ public partial class Home(
 	private DateRange? currentDateRange;
 	private HubConnection? hubConnection;
 
-	public string Prompt { get; set; } = $"Schedule an event to user with email 'test@user.com' on {DateOnly.FromDateTime(DateTime.Now)} from 15:00 till 16:30 with title 'Coffee break'";
+	public string Prompt { get; set; } = $"Schedule an event to user with email 'test@user.com' on {DateOnly.FromDateTime(DateTime.Now):dd MMMM yyyy} from 15:00 till 16:30 with title 'Coffee break'";
 
 	public string? Response { get; set; }
 

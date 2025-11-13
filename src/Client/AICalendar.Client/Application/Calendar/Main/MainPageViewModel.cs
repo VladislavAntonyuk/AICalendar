@@ -94,7 +94,7 @@ public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IAu
 		var prompt = await Shell.Current.CurrentPage.DisplayPromptAsync(
 			"Create event",
 			"Enter event details",
-			initialValue: $"Schedule an event to user with email 'test@user.com' on {DateOnly.FromDateTime(DateTime.Now)} from 15:00 till 16:30 with title 'Coffee break'");
+			initialValue: $"Schedule an event to user with email 'test@user.com' on {DateOnly.FromDateTime(DateTime.Now):dd MMMM yyyy} from 15:00 till 16:30 with title 'Coffee break'");
 
 		if (string.IsNullOrEmpty(prompt))
 		{
