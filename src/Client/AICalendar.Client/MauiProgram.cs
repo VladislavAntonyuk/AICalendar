@@ -1,10 +1,10 @@
 ﻿using AICalendar.Client.Application.Auth;
 using AICalendar.Client.Application.Calendar.EventDetails;
 using AICalendar.Client.Application.Calendar.Main;
-using AICalendar.Client.ServiceDefaults;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Syncfusion.Licensing;
 using Syncfusion.Maui.Core.Hosting;

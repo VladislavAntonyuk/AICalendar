@@ -11,10 +11,10 @@
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.0" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.0" />
 		<PackageReference Include="Microsoft.Authentication.WebAssembly.Msal" Version="10.0.0" />
-		<PackageReference Include="Microsoft.Extensions.AI.Abstractions" Version="10.0.0" />
+		<PackageReference Include="Microsoft.Extensions.AI.Abstractions" Version="10.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" />
-		<PackageReference Include="MudBlazor" Version="8.14.0" />
-		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
+		<PackageReference Include="MudBlazor" Version="8.15.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
 	</ItemGroup>
 
 	<ItemGroup>

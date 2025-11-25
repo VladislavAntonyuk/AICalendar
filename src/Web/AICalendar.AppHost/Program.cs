@@ -38,7 +38,7 @@ builder.AddProject<AICalendar_WebApp>("webfrontend")
 	   .WaitFor(apiService)
 	   .WithReference(cache)
 	   .WaitFor(cache);
-/*
+
 // To easily reach your local API project from the
 // emulator/Simulator/physical device, you can use the Dev Tunnels integration
 var publicDevTunnel = builder.AddDevTunnel("devtunnel-public")
@@ -73,9 +73,9 @@ mauiapp.AddAndroidEmulator()
        .WithReference(apiService, publicDevTunnel)// Needs a dev tunnel to reach "localhost"
        .WaitFor(apiService)
        .WaitFor(publicDevTunnel);
-*/
-builder.AddProject<AICalendar_Client>("aicalendar-client")
-	   .WithReference(apiService)
-	   .WaitFor(apiService);
+
+//builder.AddProject<AICalendar_Client>("aicalendar-client")
+//	   .WithReference(apiService)
+//	   .WaitFor(apiService);
 
 await builder.Build().RunAsync();

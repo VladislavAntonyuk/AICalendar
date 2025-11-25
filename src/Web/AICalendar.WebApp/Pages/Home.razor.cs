@@ -29,17 +29,17 @@ public partial class Home(
 		var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
 		var user = authState.User;
 		var userId = user.FindFirst("email")?.Value;
-		hubConnection = new HubConnectionBuilder()
-			.WithUrl("https://localhost:7118/hubs/calendarEvents")
-			.Build();
-		hubConnection.On("CalendarEventChanged", async () =>
-		{
-			await RefreshCalendar();
-			StateHasChanged();
-		});
-		await hubConnection.StartAsync();
 		if (!string.IsNullOrEmpty(userId))
 		{
+			hubConnection = new HubConnectionBuilder()
+				.WithUrl("https://localhost:7118/api/v1/hubs/calendarEvents")
+				.Build();
+			hubConnection.On("CalendarEventChanged", async () =>
+			{
+				await RefreshCalendar();
+				StateHasChanged();
+			});
+			await hubConnection.StartAsync();
 			await hubConnection.InvokeAsync("JoinUserGroup", userId);
 		}
 	}
@@ -68,7 +68,7 @@ public partial class Home(
 		if (calendarEvent is not null)
 		{
 			var parameters = new DialogParameters { { nameof(CalendarEventDetails.CalendarEvent), calendarEvent } };
-			var dialog = await dialogService.ShowAsync<CalendarEventDetails>(calendarEvent.Title, parameters, new DialogOptions {CloseButton = false});
+			var dialog = await dialogService.ShowAsync<CalendarEventDetails>(calendarEvent.Title, parameters, new DialogOptions { CloseButton = false });
 			await dialog.Result;
 		}
 	}

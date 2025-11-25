@@ -1,4 +1,4 @@
-namespace AICalendar.ApiService.Tests;
+﻿namespace AICalendar.ApiService.Tests;
 
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.AI;
@@ -39,7 +39,7 @@ public class WordCountEvaluator : IEvaluator
         }
         else
         {
-            if (metric.Value <= 100 && metric.Value > 5)
+            if (metric.Value is <= 100 and > 5)
                 metric.Interpretation = new EvaluationMetricInterpretation(
                     EvaluationRating.Good,
                     reason: "The response was between 6 and 100 words.");

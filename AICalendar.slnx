@@ -15,6 +15,7 @@
     <Project Path="src/Client/AICalendar.Client/AICalendar.Client.csproj" />
   </Folder>
   <Folder Name="/src/Web/">
+    <Project Path="src/Web/AICalendar.ApiService.Tests/AICalendar.ApiService.Tests.csproj" />
     <Project Path="src/Web/AICalendar.ApiService/AICalendar.ApiService.csproj" />
     <Project Path="src/Web/AICalendar.AppHost.Tests/AICalendar.AppHost.Tests.csproj" />
     <Project Path="src/Web/AICalendar.AppHost/AICalendar.AppHost.csproj" />
