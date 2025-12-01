@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 using AICalendar.ApiService.Infrastructure.Extensions;
-using Microsoft.Extensions.AI;
+using Microsoft.Agents.AI;
 
 namespace AICalendar.ApiService.Application.AI;
 
@@ -15,7 +15,7 @@ internal static class AiEvent
 		return routes;
 	}
 
-	private static IAsyncEnumerable<ChatResponseUpdate> Handler(
+	private static IAsyncEnumerable<AgentRunResponseUpdate> Handler(
 		AiHandler handler,
 		ClaimsPrincipal claims,
 		Request request,

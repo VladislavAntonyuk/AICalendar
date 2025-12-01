@@ -6,8 +6,8 @@ using AICalendar.Shared;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Agents.AI;
 using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Syncfusion.Maui.Scheduler;
 
@@ -117,12 +117,12 @@ public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IDi
 			return;
 		}
 
-		await foreach (var update in result.Content.ReadFromJsonAsAsyncEnumerable<ChatResponseUpdate>())
+		await foreach (var update in result.Content.ReadFromJsonAsAsyncEnumerable<AgentRunResponseUpdate>())
 		{
-			response += update;
+			response += update?.Text;
 		}
 
-		await Shell.Current.CurrentPage.DisplayAlertAsync("Congratulations!", response, "OK");
+		await Shell.Current.CurrentPage.DisplayAlertAsync("", response, "OK");
 	}
 
 	public async void ApplyQueryAttributes(IDictionary<string, object> query)

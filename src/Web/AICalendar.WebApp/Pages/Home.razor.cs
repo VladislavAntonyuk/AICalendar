@@ -2,9 +2,9 @@
 using AICalendar.Shared;
 using AICalendar.WebApp.Components;
 using Heron.MudCalendar;
+using Microsoft.Agents.AI;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.Extensions.AI;
 using MudBlazor;
 
 namespace AICalendar.WebApp.Pages;
@@ -18,6 +18,7 @@ public partial class Home(
 	private MudCalendar<CalendarEventItem>? calendar;
 	private DateRange? currentDateRange;
 	private HubConnection? hubConnection;
+	bool isBusy = false;
 
 	public string Prompt { get; set; } = $"Schedule an event to user with email 'test@user.com' on {DateOnly.FromDateTime(DateTime.Now):dd MMMM yyyy} from 15:00 till 16:30 with title 'Coffee break'";
 
@@ -75,6 +76,7 @@ public partial class Home(
 
 	private async Task SendRequest()
 	{
+		isBusy = true;
 		Response = string.Empty;
 		var httpClient = httpClientFactory.CreateClient("AICalendarAPI");
 		var result = await httpClient.PostAsJsonAsync("ai", new AiRequest(Prompt));
@@ -82,13 +84,16 @@ public partial class Home(
 		{
 			var problemDetails = await result.Content.ReadFromJsonAsync<ProblemDetails>();
 			Response = problemDetails?.Title;
+			isBusy = false;
 			return;
 		}
 
-		await foreach (var update in result.Content.ReadFromJsonAsAsyncEnumerable<ChatResponseUpdate>())
+		await foreach (var update in result.Content.ReadFromJsonAsAsyncEnumerable<AgentRunResponseUpdate>())
 		{
-			Response += update;
+			Response += update?.Text;
 		}
+
+		isBusy = false;
 	}
 
 	private string GetColor(Color color) => $"var(--mud-palette-{color.ToDescriptionString()})";

@@ -7,7 +7,13 @@
 	<Authorized>
 		<MudTextField T="string" @bind-Value="@Prompt" />
 
-		<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SendRequest">Send request</MudButton>
+		<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SendRequest" Disabled="isBusy">
+			@{
+				var style = $"display: {(isBusy ? "inline-block" : "none")}";
+			}
+			<MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2"  Style="@style"/>
+			Send request
+		</MudButton>
 
 		<MudText>@Response</MudText>
 

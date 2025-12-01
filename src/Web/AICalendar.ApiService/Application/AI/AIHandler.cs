@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using AICalendar.ApiService.Infrastructure.Extensions;
+using Microsoft.Agents.AI;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
@@ -9,7 +10,7 @@ namespace AICalendar.ApiService.Application.AI;
 
 internal sealed class AiHandler(IChatClient client, IOptions<AiSettings> settings, IHttpContextAccessor context)
 {
-	public async IAsyncEnumerable<ChatResponseUpdate> Handle(
+	public async IAsyncEnumerable<AgentRunResponseUpdate> Handle(
 		Guid currentUserId,
 		string prompt,
 		[EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -30,11 +31,15 @@ internal sealed class AiHandler(IChatClient client, IOptions<AiSettings> setting
 															  ["Authorization"] = $"Bearer {accessToken}"
 														  }
 													  }), cancellationToken: cancellationToken);
-		IList<McpClientTool> tools = await mcpClient.ListToolsAsync(cancellationToken: cancellationToken);
+		var tools = await mcpClient.ListToolsAsync(cancellationToken: cancellationToken);
 
 		List<ChatMessage> messages = [new(ChatRole.User, prompt)];
-		var options = new ChatOptions { Tools = [.. tools] };
-		await foreach (var chunk in client.GetStreamingResponseAsync(messages, options, cancellationToken))
+		await foreach (var chunk in client.CreateAIAgent(
+			                                  "You are a helpful assistant for managing calendar events",
+			                                  "AI Calendar Agent",
+			                                  "AI Agent for managing calendar events",
+											  tools.Cast<AITool>().ToList())
+		                                  .RunStreamingAsync(messages, cancellationToken: cancellationToken))
 		{
 			yield return chunk;
 		}
