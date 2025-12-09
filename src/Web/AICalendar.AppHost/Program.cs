@@ -1,13 +1,10 @@
-﻿using Projects;
+﻿using Aspire.Hosting.GitHub;
+using Projects;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-//var ollama = builder.AddOllama("ai")
-//					.WithImage("ollama/ollama", "latest")
-//					.WithLifetime(ContainerLifetime.Persistent)
-//					.WithDataVolume("ollama")
-//					.WithOpenWebUI(s => s.WithImage("ghcr.io/open-webui/open-webui", "0.5.20"))
-//					.AddModel("llama3.2:latest"); // phi3.5:latest // llama3.2:latest
+var model = GitHubModel.OpenAI.OpenAIGpt4oMini;
+var chat = builder.AddGitHubModel("chat", model);
 
 var cache = builder.AddRedis("cache")
                    .WithRedisInsight(s => s.WithLifetime(ContainerLifetime.Persistent))
@@ -28,9 +25,9 @@ var apiService = builder.AddProject<AICalendar_ApiService>("apiservice")
 						.WithReference(database)
 						.WaitFor(database)
 						.WithReference(cache)
-						.WaitFor(cache);
-                        // .WithReference(ollama)
-                        // .WaitFor(ollama);
+						.WaitFor(cache)
+						.WithReference(chat)
+						.WaitFor(chat);
 
 builder.AddProject<AICalendar_WebApp>("webfrontend")
 	   .WithExternalHttpEndpoints()
@@ -73,9 +70,5 @@ mauiapp.AddAndroidEmulator()
        .WithReference(apiService, publicDevTunnel)// Needs a dev tunnel to reach "localhost"
        .WaitFor(apiService)
        .WaitFor(publicDevTunnel);
-
-//builder.AddProject<AICalendar_Client>("aicalendar-client")
-//	   .WithReference(apiService)
-//	   .WaitFor(apiService);
 
 await builder.Build().RunAsync();

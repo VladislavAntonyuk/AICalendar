@@ -26,6 +26,6 @@ taskkill /PID 17980 /F
 
 ```
 dotnet tool update --global dotnet-ef
-dotnet tool install --global Microsoft.Extensions.AI.Evaluation.Console
+dotnet tool install --local Microsoft.Extensions.AI.Evaluation.Console
 dotnet tool run aieval report --path C:/TestReports --output report.html --open
 ```
