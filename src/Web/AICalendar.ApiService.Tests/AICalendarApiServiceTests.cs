@@ -14,11 +14,11 @@ public class AICalendarApiServiceTests
 	private static readonly IList<ChatMessage> Messages =
 	[
 		new(ChatRole.System, """
-		                     You're an AI assistant that can answer questions related to astronomy.
+		                     You're an AI assistant that helps manage calendar events and scheduling.
 		                     Keep your responses concise and try to stay under 100 words.
-		                     Use the imperial measurement system for all measurements in your response.
+		                     Use clear date and time formats in your responses.
 		                     """),
-		new(ChatRole.User, "How far is the planet Venus from Earth at its closest and furthest points?")
+		new(ChatRole.User, "What information do I need to provide to schedule a meeting with a colleague?")
 	];
 
 	private static readonly ReportingConfiguration DefaultReportingConfiguration =
@@ -56,14 +56,18 @@ public class AICalendarApiServiceTests
 			                                                      TestContext.Current.CancellationToken);
 
 		await using var scenarioRun = await DefaultReportingConfiguration.CreateScenarioRunAsync(
-			ScenarioName, additionalTags: ["Moon"], cancellationToken: TestContext.Current.CancellationToken);
+			ScenarioName, additionalTags: ["CalendarEvents"], cancellationToken: TestContext.Current.CancellationToken);
 
 		List<EvaluationContext> additionalContext =
 		[
 			new GroundednessEvaluatorContext(""" 
-			                                 Distance between Mars and Earth at inferior conjunction: Between 33.9 and 62.1 million miles approximately. 
-			                                 Distance between Mars and Earth at superior conjunction: Between 249 and 250 million miles approximately. 
-			                                 The exact distances can vary due to the specific orbital positions of the planets at any given time. 
+			                                 To schedule a meeting, you need to provide:
+			                                 - Event title: A descriptive name for the meeting
+			                                 - Start date and time: When the meeting begins
+			                                 - End date and time: When the meeting ends
+			                                 - Attendees: Email addresses of people invited to the meeting
+			                                 - Description (optional): Additional details about the meeting
+			                                 The system will check for conflicts with existing events for all attendees.
 			                                 """)
 		];
 		var result =
