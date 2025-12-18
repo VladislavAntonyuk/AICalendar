@@ -41,6 +41,15 @@ public static class Scheduler
 		return httpClient.DeleteAsync($"events/{id}");
 	}
 
+	[McpServerTool, Description("Return the list of public holidays")]
+	public static async Task<List<string>> GetPublicHolidays(
+		IHttpContextAccessor httpContextAccessor,
+		HttpClient httpClient)
+	{
+		SetAuth(httpClient, httpContextAccessor);
+		return await httpClient.GetFromJsonAsync<List<string>>("public_holidays") ?? [];
+	}
+
 
 	private static void SetAuth(HttpClient client, IHttpContextAccessor httpContextAccessor)
 	{

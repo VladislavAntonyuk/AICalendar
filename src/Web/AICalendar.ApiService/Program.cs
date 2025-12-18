@@ -1,5 +1,6 @@
 ﻿using AICalendar.ApiService.Application.AI;
 using AICalendar.ApiService.Application.Events;
+using AICalendar.ApiService.Application.PublicHolidays;
 using AICalendar.ApiService.Application.User;
 using AICalendar.ApiService.Hubs;
 using AICalendar.ApiService.Infrastructure.Database;
@@ -51,6 +52,7 @@ builder.Services.AddCors(options =>
 
 builder.AddUsers();
 builder.AddEvents();
+builder.AddPublicHolidays();
 builder.AddAi();
 builder.Services.AddSignalR();
 
@@ -80,9 +82,10 @@ app.Map("/", () => "AI Calendar API. Created by Vladislav Antonyuk.");
 app.MapUserRoutes();
 app.MapEventRoutes();
 app.MapAiRoutes();
+app.MapPublicHolidaysRoutes();
 app.MapHub<CalendarEventsHub>("/api/v1/hubs/calendarEvents");
 
-app.MapMcp("/mcp").RequireAuthorization();
+app.MapMcp("/mcp");//.RequireAuthorization();
 
 // Run the web server
 app.Run();
