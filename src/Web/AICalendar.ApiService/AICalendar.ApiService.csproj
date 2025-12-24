@@ -17,15 +17,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.0.0-preview.251204.1" />
+		<PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.0.0-preview.251219.1" />
 		<PackageReference Include="Aspire.Azure.AI.Inference" Version="13.0.2-preview.1.25603.5" />
 
 		<PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.5.0-preview.1" />
-		<PackageReference Include="Microsoft.Identity.Web" Version="4.1.1" />
+		<PackageReference Include="Microsoft.Identity.Web" Version="4.2.0" />
 
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1" />
 		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="13.0.2" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
