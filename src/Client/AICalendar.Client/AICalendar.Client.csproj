@@ -70,13 +70,13 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="13.0.0" />
-		<PackageReference Include="Microsoft.Agents.AI.Abstractions" Version="1.0.0-preview.251219.1" />
-		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.1" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.20" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.1" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.1" />
-		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.1" />
-		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.79.2" />
+		<PackageReference Include="Microsoft.Agents.AI.Abstractions" Version="1.0.0-preview.260212.1" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.3" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.41" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.3" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.3" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.3" />
+		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.82.1" />
 		<PackageReference Include="Syncfusion.Maui.Scheduler" Version="32.1.20" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
