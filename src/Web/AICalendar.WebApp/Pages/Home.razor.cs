@@ -88,7 +88,7 @@ public partial class Home(
 			return;
 		}
 
-		await foreach (var update in result.Content.ReadFromJsonAsAsyncEnumerable<AgentRunResponseUpdate>())
+		await foreach (var update in result.Content.ReadFromJsonAsAsyncEnumerable<AgentResponseUpdate>())
 		{
 			Response += update?.Text;
 		}

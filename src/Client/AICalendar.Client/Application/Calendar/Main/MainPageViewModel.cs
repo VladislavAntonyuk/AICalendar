@@ -117,7 +117,7 @@ public partial class MainPageViewModel(IHttpClientFactory httpClientFactory, IDi
 			return;
 		}
 
-		await foreach (var update in result.Content.ReadFromJsonAsAsyncEnumerable<AgentRunResponseUpdate>())
+		await foreach (var update in result.Content.ReadFromJsonAsAsyncEnumerable<AgentResponseUpdate>())
 		{
 			response += update?.Text;
 		}

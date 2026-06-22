@@ -91,5 +91,5 @@ app.MapMcp("/mcp");//.RequireAuthorization();
 app.Run();
 
 // Helper method to get authorization server URL
-static Uri GetAuthorizationServerUrl(MicrosoftIdentityOptions o) => new($"{o.Instance.TrimEnd('/')}/{o.TenantId}/v2.0");
-Uri GetMcpServerUrl() => builder.Configuration.GetValue<Uri>("AI:McpBaseUrl");
+static string GetAuthorizationServerUrl(MicrosoftIdentityOptions o) => $"{o.Instance.TrimEnd('/')}/{o.TenantId}/v2.0";
+string GetMcpServerUrl() => builder.Configuration.GetValue<string>("AI:McpBaseUrl");

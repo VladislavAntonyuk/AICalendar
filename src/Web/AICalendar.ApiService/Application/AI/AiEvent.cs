@@ -15,7 +15,7 @@ internal static class AiEvent
 		return routes;
 	}
 
-	private static IAsyncEnumerable<AgentRunResponseUpdate> Handler(
+	private static IAsyncEnumerable<AgentResponseUpdate> Handler(
 		AiHandler handler,
 		ClaimsPrincipal claims,
 		Request request,

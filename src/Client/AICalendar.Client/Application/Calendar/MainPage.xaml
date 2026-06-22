@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage x:Class="AICalendar.Client.Application.Calendar.MainPage"
              Shell.FlyoutBehavior="Disabled"
-             x:DataType="MainPageViewModel"
-             x:Name="HomePage">
+             x:DataType="main:MainPageViewModel"
+             x:Name="HomePage"
+             xmlns:main="clr-namespace:AICalendar.Client.Application.Calendar.Main">
 
 	<ContentPage.ToolbarItems>
 		<ToolbarItem Text="{Binding Username}"></ToolbarItem>

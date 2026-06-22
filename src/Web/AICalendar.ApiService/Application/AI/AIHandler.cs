@@ -10,7 +10,7 @@ namespace AICalendar.ApiService.Application.AI;
 
 internal sealed class AiHandler(IChatClient client, IOptions<AiSettings> settings, IHttpContextAccessor context)
 {
-	public async IAsyncEnumerable<AgentRunResponseUpdate> Handle(
+	public async IAsyncEnumerable<AgentResponseUpdate> Handle(
 		Guid currentUserId,
 		string prompt,
 		[EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -34,7 +34,7 @@ internal sealed class AiHandler(IChatClient client, IOptions<AiSettings> setting
 		var tools = await mcpClient.ListToolsAsync(cancellationToken: cancellationToken);
 
 		List<ChatMessage> messages = [new(ChatRole.User, prompt)];
-		await foreach (var chunk in client.CreateAIAgent(
+		await foreach (var chunk in client.AsAIAgent(
 			                                  "You are a helpful assistant for managing calendar events",
 			                                  "AI Calendar Agent",
 			                                  "AI Agent for managing calendar events",
